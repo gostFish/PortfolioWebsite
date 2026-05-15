@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Portfolio Website</title>
+    <meta name="description" content="Portfolio Website">
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f7f7fb;
+            --panel: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --accent: #673de6;
+            --accent-2: #1f8a70;
+            --border: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        main {
+            width: min(720px, 100%);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 32px;
+            line-height: 1.15;
+        }
+
+        p {
+            margin: 0 0 16px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        a {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            border: 1px solid transparent;
+        }
+
+        .primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .secondary {
+            background: transparent;
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Portfolio Website</h1>
+        <p>This project is a WordPress site. On a PHP-capable host, the real homepage loads through <code>index.php</code>.</p>
+        <p>If you are seeing this page, the server is serving static files instead of WordPress, so the site should be deployed to a WordPress-compatible environment.</p>
+        <div class="actions">
+            <a class="primary" href="index.php">Open WordPress site</a>
+            <a class="secondary" href="wp-login.php">WordPress login</a>
+        </div>
+        <div class="note">Domain: www.malgrech.com</div>
+    </main>
+</body>
+</html>
