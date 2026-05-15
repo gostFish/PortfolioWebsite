@@ -104,7 +104,7 @@
             "id": "576a6b9",
             "elType": "widget",
             "settings": {
-              "title": "Work Experience",
+              "title": "Malcolm Grech",
               "align": "left",
               "text_stroke_text_stroke_type": "yes",
               "_css_classes": "hostinger-ai-title",
@@ -120,7 +120,7 @@
             "id": "e839eff",
             "elType": "widget",
             "settings": {
-              "editor": "<p>As a web developer, I have crafted numerous resumes showcasing my skills and projects effectively.</p>",
+              "editor": "<p>Junior game developer with Unity, Unreal, and AI training, combining hands-on production work with academic research.</p>",
               "link_color": "#0D141A",
               "_css_classes": "hostinger-ai-description",
               "__globals__": {
@@ -161,7 +161,7 @@
             "id": "c4d6792",
             "elType": "widget",
             "settings": {
-              "title": "Portfolio",
+              "title": "Academic Background",
               "align": "left",
               "text_stroke_text_stroke_type": "yes",
               "_css_classes": "hostinger-ai-title hostinger-index-1",
@@ -177,7 +177,7 @@
             "id": "2097d3a",
             "elType": "widget",
             "settings": {
-              "title": "My Professional Journey\nExplore my work experience and projects that highlight my web development expertise.",
+              "title": "Education\nMSc in Game Development and BSc in AI from the University of Malta, with coursework in game AI, engines, machine learning, computer vision, reinforcement learning, and compiler theory.",
               "align": "left",
               "text_stroke_text_stroke_type": "yes",
               "_css_classes": "hostinger-ai-description hostinger-index-1",
@@ -195,7 +195,7 @@
             "id": "9d1fba9",
             "elType": "widget",
             "settings": {
-              "title": "Skills and Projects\nExperience. With our intuitive design and user-friendly interface, your website will captivate visitors.",
+              "title": "Technical Skills\nC#, Unity, C++, Unreal Engine, Python, HTML/CSS, PHP, Unity certification, first aid, Maltese, English, and Japanese.",
               "align": "left",
               "text_stroke_text_stroke_type": "yes",
               "_css_classes": "hostinger-ai-subtitle hostinger-index-2",

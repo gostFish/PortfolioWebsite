@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "id": "4432c10",
     "elType": "container",
@@ -168,7 +168,7 @@
                 "id": "82e8020",
                 "elType": "widget",
                 "settings": {
-                  "editor": "<p>697 Hilltop Street, Springfield, MA, USA</p>",
+                  "editor": "<p>Location details are available on request.</p>",
                   "column_gap": {
                     "unit": "px",
                     "size": 0,
@@ -297,7 +297,7 @@
             "id": "53165b4",
             "elType": "widget",
             "settings": {
-              "html": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d47368.39682225005!2d-72.489385!3d42.09623!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e6e85bbff73363%3A0x5241d930e1909b8f!2sHilltop%20St%2C%20Springfield%2C%20MA%2001128!5e0!3m2!1sen!2sus!4v1722498156021!5m2!1sen!2sus\" height=\"450\" style=\"width: 100%; min-width: 100%; border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>"
+              "html": "<div class=\"hostinger-ai-location-placeholder\">Location details are available on request.</div>"
             },
             "elements": [],
             "widgetType": "html"
@@ -309,3 +309,4 @@
     "isInner": false
   }
 ]
+

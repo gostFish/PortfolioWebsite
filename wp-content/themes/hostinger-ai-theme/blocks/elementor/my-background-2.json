@@ -65,7 +65,7 @@
             "id": "58509ed",
             "elType": "widget",
             "settings": {
-              "title": "Web Developer",
+              "title": "Malcolm Grech",
               "align": "left",
               "text_stroke_text_stroke_type": "yes",
               "_css_classes": "hostinger-ai-title",
@@ -145,7 +145,7 @@
                 "id": "6186e7b",
                 "elType": "widget",
                 "settings": {
-                  "editor": "<p>Skilled in creating responsive and user-friendly web applications tailored to client needs.</p>",
+                  "editor": "<p>Junior game developer with Unity, Unreal, and AI experience, focused on gameplay systems and production support.</p>",
                   "link_color": "#0D141A",
                   "_css_classes": "hostinger-ai-description",
                   "__globals__": {
@@ -185,7 +185,7 @@
                 "id": "6f1afce",
                 "elType": "widget",
                 "settings": {
-                  "title": "Expert in front-end technologies.",
+                  "title": "Selected highlights from my CV.",
                   "align": "left",
                   "text_stroke_text_stroke_type": "yes",
                   "_css_classes": "hostinger-ai-description hostinger-index-1",
@@ -235,7 +235,7 @@
                 "id": "2e0e067",
                 "elType": "widget",
                 "settings": {
-                  "title": "Freelance Web Developer",
+                  "title": "Junior Game Developer",
                   "align": "left",
                   "text_stroke_text_stroke_type": "yes",
                   "_css_classes": "hostinger-ai-subtitle hostinger-index-1",
@@ -253,7 +253,7 @@
                 "id": "b797497",
                 "elType": "widget",
                 "settings": {
-                  "title": "Tech Company",
+                  "title": "Game Projects",
                   "align": "left",
                   "text_stroke_text_stroke_type": "yes",
                   "_css_classes": "hostinger-ai-workplace hostinger-index-1",
@@ -271,7 +271,7 @@
                 "id": "3c84c48",
                 "elType": "widget",
                 "settings": {
-                  "title": "January 2020 - Present",
+                  "title": "April 2023 - Present",
                   "align": "left",
                   "text_stroke_text_stroke_type": "yes",
                   "_css_classes": "hostinger-ai-date hostinger-index-1",
@@ -289,7 +289,7 @@
                 "id": "85bb455",
                 "elType": "widget",
                 "settings": {
-                  "title": "Developed multiple websites, enhancing user experience and optimizing performance for clients.",
+                  "title": "Unity engineering, feature development, bug fixing, art and design support, gameplay tuning, and front-end analytics. Projects include Lemmings, Angry Birds Fury Road, CUE, a PC port, and Subway Surfers Apple Arcade port.",
                   "align": "left",
                   "text_stroke_text_stroke_type": "yes",
                   "_css_classes": "hostinger-ai-description hostinger-index-1",
@@ -307,7 +307,7 @@
                 "id": "d3baf18",
                 "elType": "widget",
                 "settings": {
-                  "title": "Previous Projects",
+                  "title": "Engineering Intern",
                   "align": "left",
                   "text_stroke_text_stroke_type": "yes",
                   "_css_classes": "hostinger-ai-subtitle hostinger-index-2",
@@ -325,7 +325,7 @@
                 "id": "7cedb77",
                 "elType": "widget",
                 "settings": {
-                  "title": "Tech Company",
+                  "title": "Game Projects",
                   "align": "left",
                   "text_stroke_text_stroke_type": "yes",
                   "_css_classes": "hostinger-ai-workplace hostinger-index-2",
@@ -343,7 +343,7 @@
                 "id": "352dbfc",
                 "elType": "widget",
                 "settings": {
-                  "title": "January 2020 - Present",
+                  "title": "April 2023 - Present",
                   "align": "left",
                   "text_stroke_text_stroke_type": "yes",
                   "_css_classes": "hostinger-ai-date hostinger-index-2",
@@ -361,7 +361,7 @@
                 "id": "48d99f3",
                 "elType": "widget",
                 "settings": {
-                  "title": "Developed multiple websites, enhancing user experience and optimizing performance for clients.",
+                  "title": "Unity engineering, feature development, bug fixing, art and design support, gameplay tuning, and front-end analytics. Projects include Lemmings, Angry Birds Fury Road, CUE, a PC port, and Subway Surfers Apple Arcade port.",
                   "align": "left",
                   "text_stroke_text_stroke_type": "yes",
                   "_css_classes": "hostinger-ai-description hostinger-index-2",
