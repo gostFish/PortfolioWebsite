@@ -85,6 +85,52 @@ if ( ! version_compare( phpversion(), HOSTINGER_AI_WEBSITES_MINIMUM_PHP_VERSION,
         $boot = new \Hostinger\AiTheme\Boot();
         $boot->run();
 
+        add_action(
+            'template_redirect',
+            function () {
+                if ( is_admin() || ! is_404() ) {
+                    return;
+                }
+
+                if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || ! in_array( strtoupper( $_SERVER['REQUEST_METHOD'] ), array( 'GET', 'HEAD' ), true ) ) {
+                    return;
+                }
+
+                $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) $_SERVER['REQUEST_URI'] : '';
+                $request_path = $request_uri !== '' ? (string) parse_url( $request_uri, PHP_URL_PATH ) : '';
+                $slug         = trim( $request_path, '/' );
+
+                if ( $slug === '' ) {
+                    return;
+                }
+
+                $section_slugs = array(
+                    'home',
+                    'about',
+                    'about-us',
+                    'services',
+                    'our-services',
+                    'service',
+                    'portfolio',
+                    'projects',
+                    'project',
+                    'contact',
+                    'blog',
+                    'faq',
+                    'team',
+                );
+
+                if ( ! in_array( $slug, $section_slugs, true ) ) {
+                    return;
+                }
+
+                $target_url = 'home' === $slug ? home_url( '/' ) : home_url( '/#' . $slug );
+
+                wp_safe_redirect( $target_url, 301 );
+                exit;
+            }
+        );
+
     } else {
         return;
     }
