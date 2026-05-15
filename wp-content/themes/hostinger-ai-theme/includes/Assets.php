@@ -253,6 +253,11 @@ CSS;
 
             $landing_home_css = <<<'CSS'
 body.home {
+    background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.22), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.20), transparent 24%),
+        radial-gradient(circle at 20% 80%, rgba(52, 211, 153, 0.14), transparent 26%),
+        linear-gradient(180deg, #09111f 0%, #040814 100%);
     position: relative;
     overflow-x: hidden;
 }
@@ -326,7 +331,7 @@ body.home .landing-brand-title a {
 body.home .landing-brand-title {
     font-size: 0.82rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0;
     margin: 0;
     text-transform: uppercase;
 }
@@ -387,14 +392,14 @@ body.home .landing-eyebrow {
     display: inline-flex;
     font-size: 0.9rem;
     gap: 10px;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
     padding: 9px 14px;
 }
 
 body.home .landing-hero h1 {
     font-family: "DM Serif Display", serif;
-    font-size: clamp(3rem, 7vw, 6rem);
-    letter-spacing: -0.03em;
+    font-size: 5.7rem;
+    letter-spacing: 0;
     line-height: 0.95;
     margin: 18px 0 16px;
     max-width: 11ch;
@@ -460,7 +465,7 @@ body.home .landing-card {
 body.home .landing-card h2,
 body.home .landing-section h2 {
     font-size: 1.15rem;
-    letter-spacing: 0.01em;
+    letter-spacing: 0;
     margin: 0 0 10px;
 }
 
@@ -532,6 +537,102 @@ body.home .landing-tile p {
     margin: 0;
 }
 
+body.home .landing-project-grid,
+body.home .landing-gamejam-grid {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+}
+
+body.home .landing-project-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+body.home .landing-gamejam-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+body.home .landing-project-card,
+body.home .landing-gamejam-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    padding: 18px;
+}
+
+body.home .landing-project-card h3,
+body.home .landing-gamejam-panel h3 {
+    color: #f4f7fb;
+    font-size: 1rem;
+    margin: 0 0 8px;
+}
+
+body.home .landing-project-list {
+    color: #a7b4c7;
+    line-height: 1.7;
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+body.home .landing-project-list li + li {
+    margin-top: 0.35rem;
+}
+
+body.home .landing-tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+body.home .landing-tag {
+    background: rgba(52, 211, 153, 0.12);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    border-radius: 999px;
+    color: #c8f7e4;
+    font-size: 0.88rem;
+    padding: 7px 10px;
+}
+
+body.home .landing-gamejam-section {
+    opacity: 0.9;
+}
+
+body.home .landing-gamejam-card {
+    align-items: start;
+    display: grid;
+    gap: 12px;
+}
+
+body.home .landing-icon-button {
+    align-items: center;
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(248, 250, 252, 0.18);
+    border-radius: 999px;
+    color: #f4f7fb;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1.2rem;
+    height: 44px;
+    justify-content: center;
+    width: 44px;
+}
+
+body.home .landing-icon-button:hover,
+body.home .landing-icon-button:focus-visible {
+    border-color: rgba(34, 211, 238, 0.7);
+}
+
+body.home .landing-gamejam-panel[hidden] {
+    display: none;
+}
+
+body.home .landing-gamejam-panel p {
+    color: #a7b4c7;
+    line-height: 1.6;
+    margin: 0;
+}
+
 body.home .landing-note {
     color: #9bb3c9;
     font-size: 0.94rem;
@@ -555,8 +656,14 @@ body.home .landing-footer {
         padding: 30px 22px;
     }
 
+    body.home .landing-hero h1 {
+        font-size: 3.5rem;
+    }
+
     body.home .landing-metrics,
-    body.home .landing-grid {
+    body.home .landing-grid,
+    body.home .landing-project-grid,
+    body.home .landing-gamejam-grid {
         grid-template-columns: 1fr;
     }
 
@@ -676,6 +783,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     projectTitles.forEach(function (titleNode) {
         buildProjectCard(findProjectCard(titleNode));
+    });
+
+    document.querySelectorAll('.landing-gamejam-card').forEach(function (card) {
+        const button = card.querySelector('.landing-icon-button');
+        const panel = card.querySelector('.landing-gamejam-panel');
+
+        if (!button || !panel) {
+            return;
+        }
+
+        button.addEventListener('click', function () {
+            const isOpen = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+            button.textContent = isOpen ? '+' : 'x';
+            panel.hidden = isOpen;
+        });
     });
 });
 JS;
