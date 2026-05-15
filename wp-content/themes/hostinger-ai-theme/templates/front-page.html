@@ -1,9 +1,133 @@
-<!-- wp:template-part {"slug":"header","tagName":"header","className":"site-header"} /-->
+<!-- wp:group {"tagName":"main","className":"landing-home","layout":{"type":"default"}} -->
+<main class="wp-block-group landing-home" id="top">
+    <div class="landing-shell">
+        <section class="landing-topbar">
+            <div class="landing-brand">
+                <span class="landing-brand-mark" aria-hidden="true"></span>
+                <!-- wp:site-title {"level":0,"className":"landing-brand-title","fontSize":"small"} /-->
+            </div>
 
-<!-- wp:group {"tagName":"main","style":{"spacing":{"padding":{"top":"0","bottom":"0"}}},"layout":{"type":"default"}} -->
-<main class="wp-block-group" style="padding-top:0;padding-bottom:0">
-    <!-- wp:post-content {"lock":{"move":false,"remove":true},"layout":{"type":"constrained"}} /-->
+            <div class="landing-badge">Portfolio website</div>
+        </section>
+
+        <section class="landing-hero">
+            <div class="landing-panel landing-hero-copy">
+                <span class="landing-eyebrow">Independent portfolio</span>
+                <!-- wp:heading {"level":1} -->
+                <h1 class="wp-block-heading">Your work, front and center.</h1>
+                <!-- /wp:heading -->
+
+                <!-- wp:paragraph {"className":"landing-lede"} -->
+                <p class="landing-lede">
+                    A fast, polished homepage that introduces the site immediately and gives your work a
+                    clear first impression.
+                </p>
+                <!-- /wp:paragraph -->
+
+                <!-- wp:buttons {"className":"landing-actions"} -->
+                <div class="wp-block-buttons landing-actions">
+                    <!-- wp:button {"url":"#work","className":"landing-button landing-button--primary"} -->
+                    <div class="wp-block-button landing-button landing-button--primary">
+                        <a class="wp-block-button__link wp-element-button" href="#work">See highlights</a>
+                    </div>
+                    <!-- /wp:button -->
+
+                    <!-- wp:button {"url":"#about","className":"landing-button landing-button--secondary is-style-outline"} -->
+                    <div class="wp-block-button landing-button landing-button--secondary is-style-outline">
+                        <a class="wp-block-button__link wp-element-button" href="#about">About the site</a>
+                    </div>
+                    <!-- /wp:button -->
+
+                    <!-- wp:button {"url":"#contact","className":"landing-button landing-button--secondary is-style-outline"} -->
+                    <div class="wp-block-button landing-button landing-button--secondary is-style-outline">
+                        <a class="wp-block-button__link wp-element-button" href="#contact">Contact section</a>
+                    </div>
+                    <!-- /wp:button -->
+                </div>
+                <!-- /wp:buttons -->
+            </div>
+
+            <div class="landing-hero-side">
+                <article class="landing-panel landing-card">
+                    <h2>What changed</h2>
+                    <p>
+                        Visitors now land on the WordPress homepage first, so the site feels immediate,
+                        self-contained, and ready to explore.
+                    </p>
+                </article>
+
+                <article class="landing-panel landing-card">
+                    <h2>At a glance</h2>
+                    <div class="landing-metrics" aria-label="site highlights">
+                        <div class="landing-metric">
+                            <strong>Instant</strong>
+                            <span>No extra clicks to reach the homepage.</span>
+                        </div>
+                        <div class="landing-metric">
+                            <strong>Real site</strong>
+                            <span>WordPress now owns the front page.</span>
+                        </div>
+                        <div class="landing-metric">
+                            <strong>Flexible</strong>
+                            <span>You can swap in your own portfolio copy later.</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="landing-sections">
+            <article class="landing-section" id="about">
+                <h2>About</h2>
+                <p>
+                    This homepage stays lightweight and focused, but it is now part of the real WordPress
+                    site instead of a standalone placeholder file.
+                </p>
+            </article>
+
+            <article class="landing-section" id="work">
+                <h2>Highlights</h2>
+                <div class="landing-grid">
+                    <div class="landing-tile">
+                        <h3>Brand presence</h3>
+                        <p>Simple, polished presentation with a strong first impression.</p>
+                    </div>
+                    <div class="landing-tile">
+                        <h3>Fast delivery</h3>
+                        <p>The page still loads quickly, but now it comes from WordPress.</p>
+                    </div>
+                    <div class="landing-tile">
+                        <h3>Easy updates</h3>
+                        <p>Swap in project links, case studies, or contact details whenever you want.</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="landing-section" id="contact">
+                <h2>Contact</h2>
+                <p>
+                    Add your preferred email address, social link, or booking page here when you are ready.
+                </p>
+                <div class="landing-contact-row">
+                    <!-- wp:button {"url":"#top","className":"landing-button landing-button--primary"} -->
+                    <div class="wp-block-button landing-button landing-button--primary">
+                        <a class="wp-block-button__link wp-element-button" href="#top">Back to top</a>
+                    </div>
+                    <!-- /wp:button -->
+
+                    <!-- wp:button {"url":"#work","className":"landing-button landing-button--secondary is-style-outline"} -->
+                    <div class="wp-block-button landing-button landing-button--secondary is-style-outline">
+                        <a class="wp-block-button__link wp-element-button" href="#work">View highlights</a>
+                    </div>
+                    <!-- /wp:button -->
+                </div>
+                <div class="landing-note">Public site status: live and ready.</div>
+            </article>
+        </section>
+
+        <footer class="landing-footer">
+            Portfolio Website
+        </footer>
+    </div>
 </main>
 <!-- /wp:group -->
-
-<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"site-footer"} /-->

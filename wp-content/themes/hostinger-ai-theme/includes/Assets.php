@@ -250,6 +250,325 @@ body:not(.wp-admin) .hostinger-ai-project-description {
 CSS;
 
             wp_add_inline_style( 'hostinger-ai-style', $dark_theme_css );
+
+            $landing_home_css = <<<'CSS'
+body.home {
+    position: relative;
+    overflow-x: hidden;
+}
+
+body.home::before {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+    content: "";
+    inset: 0;
+    opacity: 0.22;
+    pointer-events: none;
+    position: fixed;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85), transparent 88%);
+    z-index: 0;
+}
+
+body.home .wp-site-blocks {
+    position: relative;
+    z-index: 1;
+}
+
+body.home .landing-home {
+    padding: 24px 0 40px;
+}
+
+body.home .landing-shell {
+    margin: 0 auto;
+    width: min(1120px, calc(100% - 32px));
+}
+
+body.home .landing-topbar {
+    align-items: center;
+    backdrop-filter: blur(16px);
+    background: rgba(5, 10, 18, 0.55);
+    border: 1px solid rgba(167, 180, 199, 0.18);
+    border-radius: 999px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    padding: 14px 18px;
+    position: sticky;
+    top: 16px;
+    z-index: 10;
+}
+
+body.home .landing-brand {
+    align-items: center;
+    color: #f4f7fb;
+    display: inline-flex;
+    gap: 12px;
+    text-decoration: none;
+}
+
+body.home .landing-brand-mark {
+    background: linear-gradient(135deg, #22d3ee, #8b5cf6);
+    border-radius: 11px;
+    box-shadow: 0 10px 24px rgba(34, 211, 238, 0.22);
+    flex: 0 0 34px;
+    height: 34px;
+    width: 34px;
+}
+
+body.home .landing-brand-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+body.home .landing-brand-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+body.home .landing-badge {
+    align-items: center;
+    background: rgba(34, 211, 238, 0.12);
+    border: 1px solid rgba(34, 211, 238, 0.22);
+    border-radius: 999px;
+    color: #d9fbff;
+    display: inline-flex;
+    font-size: 0.92rem;
+    padding: 10px 14px;
+    white-space: nowrap;
+}
+
+body.home .landing-hero {
+    align-items: stretch;
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 1.15fr 0.85fr;
+    padding: 72px 0 28px;
+}
+
+body.home .landing-panel,
+body.home .landing-section {
+    backdrop-filter: blur(18px);
+    background: rgba(10, 19, 34, 0.78);
+    border: 1px solid rgba(167, 180, 199, 0.18);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+body.home .landing-hero-copy {
+    border-radius: 32px;
+    overflow: hidden;
+    padding: 42px;
+    position: relative;
+}
+
+body.home .landing-hero-copy::after {
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.18), transparent 68%);
+    border-radius: 50%;
+    bottom: -35%;
+    content: "";
+    height: 320px;
+    pointer-events: none;
+    position: absolute;
+    right: -12%;
+    width: 320px;
+}
+
+body.home .landing-eyebrow {
+    align-items: center;
+    background: rgba(139, 92, 246, 0.14);
+    border: 1px solid rgba(139, 92, 246, 0.24);
+    border-radius: 999px;
+    color: #efe7ff;
+    display: inline-flex;
+    font-size: 0.9rem;
+    gap: 10px;
+    letter-spacing: 0.02em;
+    padding: 9px 14px;
+}
+
+body.home .landing-hero h1 {
+    font-family: "DM Serif Display", serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    margin: 18px 0 16px;
+    max-width: 11ch;
+}
+
+body.home .landing-lede {
+    color: #a7b4c7;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin: 0;
+    max-width: 58ch;
+}
+
+body.home .landing-actions,
+body.home .landing-contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+body.home .landing-actions {
+    margin-top: 28px;
+}
+
+body.home .landing-button .wp-block-button__link {
+    align-items: center;
+    border-radius: 999px;
+    display: inline-flex;
+    font-weight: 700;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 18px;
+    text-decoration: none;
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+body.home .landing-button .wp-block-button__link:hover,
+body.home .landing-button .wp-block-button__link:focus-visible {
+    transform: translateY(-1px);
+}
+
+body.home .landing-button--primary .wp-block-button__link {
+    background: linear-gradient(135deg, #22d3ee, #8ee8f3);
+    color: #04111d;
+}
+
+body.home .landing-button--secondary .wp-block-button__link {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(167, 180, 199, 0.18);
+    color: #f4f7fb;
+}
+
+body.home .landing-hero-side {
+    display: grid;
+    gap: 16px;
+}
+
+body.home .landing-card {
+    border-radius: 24px;
+    padding: 22px;
+}
+
+body.home .landing-card h2,
+body.home .landing-section h2 {
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+    margin: 0 0 10px;
+}
+
+body.home .landing-card p,
+body.home .landing-section p {
+    color: #a7b4c7;
+    line-height: 1.7;
+    margin: 0;
+}
+
+body.home .landing-metrics {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+body.home .landing-metric {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 18px;
+}
+
+body.home .landing-metric strong {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+body.home .landing-metric span {
+    color: #a7b4c7;
+    font-size: 0.93rem;
+    line-height: 1.5;
+}
+
+body.home .landing-sections {
+    display: grid;
+    gap: 16px;
+    padding-bottom: 40px;
+}
+
+body.home .landing-section {
+    border-radius: 28px;
+    padding: 28px;
+}
+
+body.home .landing-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 18px;
+}
+
+body.home .landing-tile {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    padding: 18px;
+}
+
+body.home .landing-tile h3 {
+    font-size: 1rem;
+    margin: 0 0 8px;
+}
+
+body.home .landing-tile p {
+    color: #a7b4c7;
+    line-height: 1.6;
+    margin: 0;
+}
+
+body.home .landing-note {
+    color: #9bb3c9;
+    font-size: 0.94rem;
+    margin-top: 16px;
+}
+
+body.home .landing-footer {
+    color: #8ea2b6;
+    font-size: 0.9rem;
+    padding: 8px 0 22px;
+    text-align: center;
+}
+
+@media (max-width: 880px) {
+    body.home .landing-hero {
+        grid-template-columns: 1fr;
+        padding-top: 34px;
+    }
+
+    body.home .landing-hero-copy {
+        padding: 30px 22px;
+    }
+
+    body.home .landing-metrics,
+    body.home .landing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.home .landing-topbar {
+        align-items: flex-start;
+        border-radius: 26px;
+        flex-direction: column;
+    }
+}
+CSS;
+
+            wp_add_inline_style( 'hostinger-ai-style', $landing_home_css );
         }
 
         $this->output_font_css();
