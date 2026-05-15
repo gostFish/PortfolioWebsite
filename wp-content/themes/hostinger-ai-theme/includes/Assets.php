@@ -116,6 +116,140 @@ class Assets {
                 'hostinger-ai-style',
                 '.hostinger-ai-fade-up { opacity: 0; }'
             );
+
+            $dark_theme_css = <<<'CSS'
+body:not(.wp-admin) {
+    background:
+        radial-gradient(circle at top, rgba(34, 211, 238, 0.14), transparent 34%),
+        linear-gradient(180deg, #0b1220 0%, #09111d 100%);
+    color: #f8fafc;
+}
+
+body:not(.wp-admin),
+body:not(.wp-admin) .wp-site-blocks,
+body:not(.wp-admin) .wp-site-blocks > * {
+    background-color: transparent;
+}
+
+body:not(.wp-admin) .wp-site-blocks,
+body:not(.wp-admin) .site {
+    color: #f8fafc;
+}
+
+body:not(.wp-admin) a {
+    color: #d9f6ff;
+}
+
+body:not(.wp-admin) a:hover,
+body:not(.wp-admin) a:focus-visible {
+    color: #22d3ee;
+}
+
+body:not(.wp-admin) .hostinger-ai-menu,
+body:not(.wp-admin) .hostinger-ai-menu-wrapper,
+body:not(.wp-admin) .site-header,
+body:not(.wp-admin) .site-footer {
+    background-color: #0b1220;
+}
+
+body:not(.wp-admin) .wp-block-group,
+body:not(.wp-admin) .wp-block-columns,
+body:not(.wp-admin) .wp-block-column,
+body:not(.wp-admin) .wp-block-post,
+body:not(.wp-admin) .wp-block-query,
+body:not(.wp-admin) .wp-block-media-text__content {
+    color: inherit;
+}
+
+body:not(.wp-admin) .hostinger-ai-project-card {
+    position: relative;
+    display: grid;
+    gap: 0.9rem;
+    padding-bottom: 1rem;
+    border-radius: 24px;
+}
+
+body:not(.wp-admin) .hostinger-ai-project-card > .wp-block-group:first-child,
+body:not(.wp-admin) .hostinger-ai-project-card > .wp-block-image:first-child,
+body:not(.wp-admin) .hostinger-ai-project-card > figure:first-child {
+    position: relative;
+}
+
+body:not(.wp-admin) .hostinger-ai-project-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(248, 250, 252, 0.18);
+    background: rgba(15, 23, 42, 0.72);
+    color: #f8fafc;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 12px 30px rgba(2, 6, 23, 0.35);
+    transition: transform 0.28s ease, background-color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+
+body:not(.wp-admin) .hostinger-ai-project-toggle:hover,
+body:not(.wp-admin) .hostinger-ai-project-toggle:focus-visible {
+    transform: translateY(-1px) scale(1.03);
+    border-color: rgba(34, 211, 238, 0.7);
+    background: rgba(15, 23, 42, 0.92);
+}
+
+body:not(.wp-admin) .hostinger-ai-project-toggle svg {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.28s ease;
+}
+
+body:not(.wp-admin) .hostinger-ai-project-card.is-open .hostinger-ai-project-toggle svg {
+    transform: rotate(45deg);
+}
+
+body:not(.wp-admin) .hostinger-ai-project-details {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    transition: grid-template-rows 0.35s ease, opacity 0.35s ease, transform 0.35s ease;
+}
+
+body:not(.wp-admin) .hostinger-ai-project-card.is-open .hostinger-ai-project-details {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body:not(.wp-admin) .hostinger-ai-project-details-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+body:not(.wp-admin) .hostinger-ai-project-title,
+body:not(.wp-admin) .hostinger-ai-project-description {
+    color: #f8fafc;
+}
+
+body:not(.wp-admin) .hostinger-ai-project-description {
+    margin-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body:not(.wp-admin) .hostinger-ai-project-toggle,
+    body:not(.wp-admin) .hostinger-ai-project-toggle svg,
+    body:not(.wp-admin) .hostinger-ai-project-details {
+        transition: none;
+    }
+}
+CSS;
+
+            wp_add_inline_style( 'hostinger-ai-style', $dark_theme_css );
         }
 
         $this->output_font_css();
@@ -152,5 +286,81 @@ class Assets {
             wp_get_theme()->get( 'Version' ),
             true,
         );
+
+        $project_toggle_script = <<<'JS'
+document.addEventListener('DOMContentLoaded', function () {
+    const projectTitles = document.querySelectorAll('.hostinger-ai-project-title');
+    const processedCards = new WeakSet();
+
+    const toggleIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M11 5h2v14h-2zM5 11h14v2H5z"></path></svg>';
+
+    function findProjectCard(titleNode) {
+        return titleNode.closest('.project-item') || titleNode.closest('.wp-block-group');
+    }
+
+    function getDirectProjectImage(card) {
+        return Array.from(card.children).find(function (child) {
+            return child.querySelector('.hostinger-ai-project-image') || child.classList.contains('hostinger-ai-project-image') || child.matches('figure, .wp-block-image');
+        }) || null;
+    }
+
+    function buildProjectCard(card) {
+        if (!card || processedCards.has(card)) {
+            return;
+        }
+
+        const title = card.querySelector('.hostinger-ai-project-title');
+        const description = card.querySelector('.hostinger-ai-project-description');
+        const imageWrapper = getDirectProjectImage(card);
+
+        if (!title || !description || !imageWrapper) {
+            return;
+        }
+
+        const directChildren = Array.from(card.children);
+        const imageIndex = directChildren.indexOf(imageWrapper);
+
+        if (imageIndex === -1) {
+            return;
+        }
+
+        const detailsWrapper = document.createElement('div');
+        detailsWrapper.className = 'hostinger-ai-project-details';
+
+        const detailsInner = document.createElement('div');
+        detailsInner.className = 'hostinger-ai-project-details-inner';
+
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'hostinger-ai-project-toggle';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Show project details');
+        toggle.innerHTML = toggleIcon;
+
+        directChildren.slice(imageIndex + 1).forEach(function (child) {
+            detailsInner.appendChild(child);
+        });
+
+        detailsWrapper.appendChild(detailsInner);
+        imageWrapper.insertAdjacentElement('afterend', toggle);
+        toggle.insertAdjacentElement('afterend', detailsWrapper);
+
+        card.classList.add('hostinger-ai-project-card');
+        processedCards.add(card);
+
+        toggle.addEventListener('click', function () {
+            const isOpen = card.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            toggle.setAttribute('aria-label', isOpen ? 'Hide project details' : 'Show project details');
+        });
+    }
+
+    projectTitles.forEach(function (titleNode) {
+        buildProjectCard(findProjectCard(titleNode));
+    });
+});
+JS;
+
+        wp_add_inline_script( 'hostinger-ai-scripts', $project_toggle_script );
     }
 }

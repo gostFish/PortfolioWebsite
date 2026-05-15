@@ -8,39 +8,39 @@
 			"palette": [
 				{
 					"slug": "color1",
-					"color": "#E1D7C6",
+					"color": "#0B1220",
 					"name": "Color 1 (Section backgrounds)"
 				},
                 {
                   "slug": "color2",
-                  "color": "#2C2A29",
+                  "color": "#111827",
                   "name": "Color 2 (Section backgrounds)"
                 },
                 {
                   "slug": "color3",
-                  "color": "#5A504A",
+                  "color": "#22D3EE",
                   "name": "Color 3 (Button background)"
                 },
                 {
                   "slug": "light",
-                  "color": "#ffffff",
+                  "color": "#F8FAFC",
                   "name": "Light (Text on Color 2 and Gradient)"
                 },
                 {
                   "slug": "dark",
-                  "color": "#0d141a",
+                  "color": "#D8E1EE",
                   "name": "Dark (Text on Light and Color 1)"
                 },
                 {
                   "slug": "grey",
-                  "color": "#B8C0CC",
+                  "color": "#556071",
                   "name": "Grey (Form borders)"
                 }
 			],
 			"gradients": [
 				{
 					"slug": "gradient-one",
-					"gradient": "linear-gradient(135deg, #E1D7C6 0%, #D4A373 100%)",
+					"gradient": "linear-gradient(135deg, #0B1220 0%, #16263D 100%)",
 					"name": "Section background gradient"
 				}
 			]
@@ -426,7 +426,8 @@
 	},
 	"styles": {
 		"color": {
-			"text": "var(--wp--preset--color--contrast)"
+			"background": "var(--wp--preset--color--color1)",
+			"text": "var(--wp--preset--color--light)"
 		},
 		"elements": {
 			"button": {
@@ -445,8 +446,8 @@
 					"radius": "28px"
 				},
 				"color": {
-					"background": "var(--wp--preset--color--primary)",
-					"text": "var(--wp--preset--color--contrast)"
+					"background": "var(--wp--preset--color--color3)",
+					"text": "var(--wp--preset--color--light)"
 				},
 				"typography": {
 					"fontSize": "var(--wp--preset--font-size--small)",
@@ -454,27 +455,27 @@
 				},
 				":hover": {
 					"border": {
-						"color": "var(--wp--preset--color--secondary)"
+						"color": "var(--wp--preset--color--light)"
 					}
 				}
 			},
 			"caption": {
 				"color": {
-					"text": "var(--wp--preset--color--primary)"
+					"text": "var(--wp--preset--color--light)"
 				}
 			},
 			"cite": {
 				"color": {
-					"text": "var(--wp--preset--color--primary)"
+					"text": "var(--wp--preset--color--light)"
 				}
 			},
 			"link": {
 				"color": {
-					"text": "var(--wp--preset--color--contrast)"
+					"text": "var(--wp--preset--color--light)"
 				},
 				":hover": {
 					"color": {
-						"text": "var(--wp--preset--color--contrast)"
+						"text": "var(--wp--preset--color--color3)"
 					},
 					"typography": {
 						"textDecoration": "none"
@@ -482,12 +483,12 @@
 				},
 				":focus": {
 					"color": {
-						"text": "var(--wp--preset--color--contrast)"
+						"text": "var(--wp--preset--color--light)"
 					}
 				},
 				":active": {
 					"color": {
-						"text": "var(--wp--preset--color--contrast)"
+						"text": "var(--wp--preset--color--color3)"
 					}
 				}
 			}
