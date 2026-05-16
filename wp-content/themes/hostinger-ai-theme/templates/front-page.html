@@ -113,26 +113,71 @@
                 <div class="landing-section-header">
                     <div>
                         <h2>Game and Interactive Project List</h2>
-                        <p>All entries are present but tucked away. Use the button to reveal them in small increments.</p>
+                        <p>Professional releases are highlighted first. Open the section for the full list, then expand or reduce the smaller projects.</p>
                     </div>
-                    <button class="landing-load-more" type="button" data-reveal-count="4" aria-controls="game-list">Show projects</button>
+                    <button class="landing-reveal-button" type="button" aria-expanded="false" aria-controls="game-details">Open games</button>
                 </div>
-                <div class="landing-game-grid" id="game-list">
-                    <div class="landing-game-item" hidden><strong>Lemmings</strong><span>Professional Unity project work at Exient.</span></div>
-                    <div class="landing-game-item" hidden><strong>Angry Birds Fury Road</strong><span>Professional Unity project work at Exient.</span></div>
-                    <div class="landing-game-item" hidden><strong>CUE - PC Port</strong><span>Professional porting and production support.</span></div>
-                    <div class="landing-game-item" hidden><strong>Subway Surfers+ - Apple Arcade Port</strong><span>Professional porting and production support.</span></div>
-                    <div class="landing-game-item" hidden><strong>Undisclosed AAA Game / Shrapnel Pre-Alpha</strong><span>Sperasoft internship work around Unreal Engine production practices.</span></div>
-                    <div class="landing-game-item" hidden><strong>You're Dead Meat</strong><span>2024 Malta Global Game Jam multiplayer platformer fighter.</span></div>
-                    <div class="landing-game-item" hidden><strong>Infosec Awareness Game</strong><span>LeoVegas internal information security education game with dialog and minigames.</span></div>
-                    <div class="landing-game-item" hidden><strong>Darwin's Vanguard</strong><span>2023 AI and Games conference game jam tower defence with learning enemy AI agents.</span></div>
-                    <div class="landing-game-item" hidden><strong>Root2</strong><span>2022 Malta Global Game Jam two-player co-op vertical scrolling endless runner.</span></div>
-                    <div class="landing-game-item" hidden><strong>Dungeon Master</strong><span>2022 AI and Games game jam procedurally generated platformer with evolving collectables.</span></div>
-                    <div class="landing-game-item" hidden><strong>Adrift</strong><span>2022 group assignment, narrative first-person fishing survival game.</span></div>
-                    <div class="landing-game-item" hidden><strong>Dungeon of Stonefang</strong><span>2021 game engines assignment, rogue-like dungeon crawler.</span></div>
-                    <div class="landing-game-item" hidden><strong>Savings</strong><span>2020 GEMMA Financial Capability Game Design Competition, life-economy visual novel made in Ren'Py.</span></div>
-                    <div class="landing-game-item" hidden><strong>Final Frontier</strong><span>2020 Advanced Game AI assignment, vertical scrolling 2D shooter.</span></div>
-                    <div class="landing-game-item" hidden><strong>Deep Blue</strong><span>2019 University of Malta AI GameJam side-scrolling survival game.</span></div>
+                <div class="landing-reveal-panel" id="game-details">
+                    <div class="landing-game-sections">
+                        <section class="landing-game-group" aria-labelledby="professional-games-title">
+                            <div class="landing-subsection-header">
+                                <div>
+                                    <h3 id="professional-games-title">Professional Games</h3>
+                                    <p>Commercial releases, ports, and pre-alpha production support.</p>
+                                </div>
+                            </div>
+                            <div class="landing-game-feature-grid">
+                                <a class="landing-game-item landing-game-item--link landing-game-item--feature" href="https://play.google.com/store/apps/details?id=com.sadpuppy.lemmings" target="_blank" rel="noreferrer">
+                                    <div class="landing-game-logo-wrap">
+                                        <img class="landing-game-logo landing-game-logo--square" src="wp-content/themes/hostinger-ai-theme/assets/images/portfolio/lemmings-icon.jpg" alt="Lemmings logo">
+                                    </div>
+                                    <div class="landing-game-copy">
+                                        <strong>Lemmings</strong>
+                                        <span>Professional Unity project work at Exient.</span>
+                                    </div>
+                                </a>
+                                <a class="landing-game-item landing-game-item--link landing-game-item--feature" href="https://angrybirds.fandom.com/wiki/Angry_Birds_Fury_Road" target="_blank" rel="noreferrer">
+                                    <div class="landing-game-logo-wrap">
+                                        <img class="landing-game-logo landing-game-logo--wide" src="wp-content/themes/hostinger-ai-theme/assets/images/portfolio/angry-birds-fury-road-logo.png" alt="Angry Birds Fury Road logo">
+                                    </div>
+                                    <div class="landing-game-copy">
+                                        <strong>Angry Birds Fury Road</strong>
+                                        <span>Professional Unity project work at Exient.</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="landing-game-grid landing-game-grid--primary">
+                                <a class="landing-game-item landing-game-item--link" href="https://store.steampowered.com/app/3411830/Cards_the_Universe_and_Everything/" target="_blank" rel="noreferrer"><strong>CUE - PC Port</strong><span>Professional porting and production support.</span></a>
+                                <a class="landing-game-item landing-game-item--link" href="https://apps.apple.com/us/app/subway-surfers/id6744608300" target="_blank" rel="noreferrer"><strong>Subway Surfers+</strong><span>Professional porting and production support.</span></a>
+                                <a class="landing-game-item landing-game-item--link" href="https://www.shrapnel.com" target="_blank" rel="noreferrer"><strong>Shrapnel Pre-Alpha</strong><span>Sperasoft internship work around Unreal Engine production practices.</span></a>
+                            </div>
+                        </section>
+
+                        <section class="landing-game-group landing-game-group--secondary" aria-labelledby="smaller-games-title">
+                            <div class="landing-subsection-header landing-subsection-header--muted">
+                                <div>
+                                    <h3 id="smaller-games-title">Game Jams and Smaller Projects</h3>
+                                    <p>Less-emphasised archive of jams, coursework, and internal interactive work.</p>
+                                </div>
+                            </div>
+                            <div class="landing-game-grid landing-game-grid--secondary" id="game-list">
+                                <a class="landing-game-item landing-game-item--link" href="https://github.com/gostFish/Youre_Dead_Meat" target="_blank" rel="noreferrer"><strong>You're Dead Meat</strong><span>2024 Malta Global Game Jam multiplayer platformer fighter.</span></a>
+                                <div class="landing-game-item"><strong>Infosec Awareness Game</strong><span>LeoVegas internal information security education game with dialog and minigames.</span></div>
+                                <div class="landing-game-item"><strong>Darwin's Vanguard</strong><span>2023 AI and Games conference game jam tower defence with learning enemy AI agents.</span></div>
+                                <a class="landing-game-item landing-game-item--link" href="https://github.com/gostFish/Root2" target="_blank" rel="noreferrer"><strong>Root2</strong><span>2022 Malta Global Game Jam two-player co-op vertical scrolling endless runner.</span></a>
+                                <div class="landing-game-item" hidden><strong>Dungeon Master</strong><span>2022 AI and Games game jam procedurally generated platformer with evolving collectables.</span></div>
+                                <a class="landing-game-item landing-game-item--link" href="https://github.com/gostFish/Adrift" target="_blank" rel="noreferrer" hidden><strong>Adrift</strong><span>2022 group assignment, narrative first-person fishing survival game.</span></a>
+                                <a class="landing-game-item landing-game-item--link" href="https://github.com/gostFish/DungeonsOfStonefang" target="_blank" rel="noreferrer" hidden><strong>Dungeon of Stonefang</strong><span>2021 game engines assignment, rogue-like dungeon crawler.</span></a>
+                                <a class="landing-game-item landing-game-item--link" href="https://github.com/gostFish/Savings" target="_blank" rel="noreferrer" hidden><strong>Savings</strong><span>2020 GEMMA Financial Capability Game Design Competition, life-economy visual novel made in Ren'Py.</span></a>
+                                <div class="landing-game-item" hidden><strong>Final Frontier</strong><span>2020 Advanced Game AI assignment, vertical scrolling 2D shooter.</span></div>
+                                <div class="landing-game-item" hidden><strong>Deep Blue</strong><span>2019 University of Malta AI GameJam side-scrolling survival game.</span></div>
+                            </div>
+                            <div class="landing-list-controls">
+                                <button class="landing-load-more" type="button" data-reveal-count="4" data-initial-count="4" aria-controls="game-list">Show more projects</button>
+                                <button class="landing-show-less" type="button" data-reveal-count="4" data-initial-count="4" aria-controls="game-list">Show less</button>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </article>
 

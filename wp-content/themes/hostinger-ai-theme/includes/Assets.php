@@ -663,7 +663,9 @@ body.home .landing-footer {
     body.home .landing-metrics,
     body.home .landing-grid,
     body.home .landing-project-grid,
-    body.home .landing-gamejam-grid {
+    body.home .landing-game-feature-grid,
+    body.home .landing-game-grid--primary,
+    body.home .landing-game-grid--secondary {
         grid-template-columns: 1fr;
     }
 
@@ -677,7 +679,8 @@ body.home .landing-footer {
 body.home .landing-button,
 body.home .landing-reveal-button,
 body.home .landing-email-toggle,
-body.home .landing-load-more {
+body.home .landing-load-more,
+body.home .landing-show-less {
     align-items: center;
     border-radius: 999px;
     cursor: pointer;
@@ -697,7 +700,9 @@ body.home .landing-reveal-button:focus-visible,
 body.home .landing-email-toggle:hover,
 body.home .landing-email-toggle:focus-visible,
 body.home .landing-load-more:hover,
-body.home .landing-load-more:focus-visible {
+body.home .landing-load-more:focus-visible,
+body.home .landing-show-less:hover,
+body.home .landing-show-less:focus-visible {
     transform: translateY(-1px);
 }
 
@@ -710,10 +715,18 @@ body.home .landing-email-toggle {
 
 body.home .landing-button--secondary,
 body.home .landing-reveal-button,
-body.home .landing-load-more {
+body.home .landing-load-more,
+body.home .landing-show-less {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(167, 180, 199, 0.18);
     color: #f4f7fb;
+}
+
+body.home .landing-load-more:disabled,
+body.home .landing-show-less:disabled {
+    cursor: default;
+    opacity: 0.42;
+    transform: none;
 }
 
 body.home .landing-portrait-card {
@@ -761,18 +774,151 @@ body.home .landing-reveal-panel > div {
     min-height: 0;
 }
 
+body.home .landing-game-sections {
+    display: grid;
+    gap: 24px;
+}
+
+body.home .landing-game-group {
+    display: grid;
+    gap: 18px;
+}
+
+body.home .landing-game-group--secondary {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(167, 180, 199, 0.12);
+    border-radius: 24px;
+    padding: 22px;
+}
+
+body.home .landing-subsection-header {
+    align-items: flex-end;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+body.home .landing-subsection-header h3 {
+    color: #f4f7fb;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+body.home .landing-subsection-header p {
+    margin: 6px 0 0;
+}
+
+body.home .landing-subsection-header--muted h3 {
+    color: #d9e2f2;
+}
+
+body.home .landing-subsection-header--muted p {
+    color: #93a4bc;
+}
+
+body.home .landing-game-feature-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 body.home .landing-game-grid {
     display: grid;
     gap: 14px;
-    grid-template-columns: repeat(3, 1fr);
-    margin-top: 18px;
+}
+
+body.home .landing-game-grid--primary,
+body.home .landing-game-grid--secondary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 body.home .landing-game-item {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     padding: 18px;
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+body.home .landing-game-item--link {
+    color: inherit;
+    text-decoration: none;
+}
+
+body.home .landing-game-item--link:hover,
+body.home .landing-game-item--link:focus-visible {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(142, 232, 243, 0.32);
+    transform: translateY(-2px);
+}
+
+body.home .landing-game-item--feature {
+    background: linear-gradient(160deg, rgba(34, 211, 238, 0.12), rgba(255, 255, 255, 0.04));
+    border-color: rgba(142, 232, 243, 0.26);
+    padding: 22px;
+}
+
+body.home .landing-game-logo-wrap {
+    align-items: center;
+    background: rgba(4, 8, 20, 0.56);
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    min-height: 178px;
+    padding: 18px;
+}
+
+body.home .landing-game-logo {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+body.home .landing-game-logo--square {
+    border-radius: 22px;
+    max-height: 138px;
+}
+
+body.home .landing-game-logo--wide {
+    max-height: 150px;
+    width: 100%;
+}
+
+body.home .landing-game-copy {
+    display: grid;
+    gap: 8px;
+}
+
+body.home .landing-game-item--feature strong {
+    font-size: 1.35rem;
+    margin-bottom: 0;
+}
+
+body.home .landing-game-item--feature span {
+    font-size: 1rem;
+}
+
+body.home .landing-game-group--secondary .landing-game-item {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(167, 180, 199, 0.09);
+}
+
+body.home .landing-game-group--secondary .landing-game-item strong {
+    font-size: 0.98rem;
+}
+
+body.home .landing-game-group--secondary .landing-game-item span {
+    color: #96a5bb;
+    font-size: 0.92rem;
+}
+
+body.home .landing-list-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 body.home .landing-game-item[hidden] {
@@ -812,8 +958,19 @@ body.home .landing-contact-panel textarea {
         flex-direction: column;
     }
 
-    body.home .landing-game-grid {
+    body.home .landing-subsection-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    body.home .landing-game-feature-grid,
+    body.home .landing-game-grid--primary,
+    body.home .landing-game-grid--secondary {
         grid-template-columns: 1fr;
+    }
+
+    body.home .landing-game-group--secondary {
+        padding: 18px;
     }
 
     body.home .landing-portrait-card img {
@@ -948,27 +1105,55 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelectorAll('.landing-load-more').forEach(function (button) {
-        const list = document.getElementById(button.getAttribute('aria-controls'));
+        const listId = button.getAttribute('aria-controls');
+        const list = document.getElementById(listId);
+        const controls = button.closest('.landing-list-controls');
+        const showLessButton = controls ? controls.querySelector('.landing-show-less[aria-controls="' + listId + '"]') : null;
         const increment = Number(button.getAttribute('data-reveal-count')) || 4;
+        const initialCount = Number(button.getAttribute('data-initial-count')) || increment;
 
         if (!list) {
             return;
         }
 
-        function updateButton() {
-            const hiddenItems = list.querySelectorAll('.landing-game-item[hidden]');
-            button.textContent = hiddenItems.length ? 'Show ' + Math.min(increment, hiddenItems.length) + ' more projects' : 'All projects shown';
-            button.disabled = hiddenItems.length === 0;
+        const items = Array.from(list.querySelectorAll('.landing-game-item'));
+        const minimumVisible = Math.min(initialCount, items.length);
+        let visibleCount = items.filter(function (item) {
+            return !item.hidden;
+        }).length || minimumVisible;
+
+        function syncItems() {
+            items.forEach(function (item, index) {
+                item.hidden = index >= visibleCount;
+            });
+        }
+
+        function updateButtons() {
+            const allShown = visibleCount >= items.length;
+            button.textContent = allShown ? 'All projects shown' : 'Show more projects';
+            button.disabled = allShown;
+
+            if (showLessButton) {
+                showLessButton.disabled = visibleCount <= minimumVisible;
+            }
         }
 
         button.addEventListener('click', function () {
-            Array.from(list.querySelectorAll('.landing-game-item[hidden]')).slice(0, increment).forEach(function (item) {
-                item.hidden = false;
-            });
-            updateButton();
+            visibleCount = Math.min(items.length, visibleCount + increment);
+            syncItems();
+            updateButtons();
         });
 
-        updateButton();
+        if (showLessButton) {
+            showLessButton.addEventListener('click', function () {
+                visibleCount = Math.max(minimumVisible, visibleCount - increment);
+                syncItems();
+                updateButtons();
+            });
+        }
+
+        syncItems();
+        updateButtons();
     });
 });
 JS;
