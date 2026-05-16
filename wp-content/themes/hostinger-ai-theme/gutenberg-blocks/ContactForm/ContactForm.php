@@ -5,6 +5,12 @@ namespace Hostinger\AiTheme\GutenbergBlocks\ContactForm;
 defined( 'ABSPATH' ) || exit;
 
 class ContactForm {
+    private const MAX_NAME_LENGTH    = 120;
+    private const MAX_EMAIL_LENGTH   = 254;
+    private const MAX_MESSAGE_LENGTH = 5000;
+    private const RATE_LIMIT_MAX     = 5;
+    private const RATE_LIMIT_WINDOW  = 900;
+
     public function __construct() {
         add_action( 'init', array( $this, 'register_block' ) );
         add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_assets_for_editor' ) );
@@ -61,11 +67,13 @@ class ContactForm {
     }
 
     public function register_scripts(): void {
+        $script_path = __DIR__ . '/build/view.js';
+
         wp_register_script(
             'hostinger-contact-form-block',
             get_template_directory_uri() . '/gutenberg-blocks/ContactForm/build/view.js',
             array( 'jquery' ),
-            wp_get_theme()->get( 'Version' ),
+            file_exists( $script_path ) ? (string) filemtime( $script_path ) : wp_get_theme()->get( 'Version' ),
             true
         );
 
@@ -92,17 +100,33 @@ class ContactForm {
     public function handle_contact_submit(): void {
         check_ajax_referer( 'submit_contactform', 'nonce' );
 
-        $name           = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
-        $email          = isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
-        $privacy_policy = isset( $_POST['privacy_policy'] ) ? sanitize_text_field( $_POST['privacy_policy'] ) : '';
-        $form_message   = isset( $_POST['message'] ) ? sanitize_text_field( $_POST['message'] ) : '';
+        if ( ! $this->is_post_request() ) {
+            wp_send_json_error( array( 'message' => __( 'Invalid request.', 'hostinger-ai-theme' ) ), 405 );
+        }
+
+        if ( $this->get_post_field( 'website_url' ) !== '' ) {
+            wp_send_json_success( array( 'message' => __( 'Successfully submitted!', 'hostinger-ai-theme' ) ) );
+        }
+
+        $name           = $this->sanitize_limited_text( $this->get_post_field( 'name' ), self::MAX_NAME_LENGTH );
+        $email          = sanitize_email( $this->get_post_field( 'email' ) );
+        $privacy_policy = sanitize_text_field( $this->get_post_field( 'privacy_policy' ) );
+        $form_message   = $this->sanitize_limited_textarea( $this->get_post_field( 'message' ), self::MAX_MESSAGE_LENGTH );
 
         if ( $privacy_policy !== 'on' ) {
             wp_send_json_error( array( 'message' => __( 'Please agree with privacy policy.', 'hostinger-ai-theme' ) ) );
         }
 
-        if ( ! is_email( $email ) ) {
+        if ( empty( $name ) || empty( $form_message ) ) {
+            wp_send_json_error( array( 'message' => __( 'Please fill in all required fields.', 'hostinger-ai-theme' ) ) );
+        }
+
+        if ( strlen( $email ) > self::MAX_EMAIL_LENGTH || ! is_email( $email ) ) {
             wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'hostinger-ai-theme' ) ) );
+        }
+
+        if ( $this->is_rate_limited( $email ) ) {
+            wp_send_json_error( array( 'message' => __( 'Please wait a few minutes before trying again.', 'hostinger-ai-theme' ) ), 429 );
         }
 
         $subject = __( 'New Contact Form Submission', 'hostinger-ai-theme' );
@@ -115,13 +139,8 @@ class ContactForm {
 
         $message = $this->get_email_content( $email_data );
 
-        $headers = array(
-            'From: ' . get_bloginfo( 'name' ) . ' <info@' . parse_url( home_url(), PHP_URL_HOST ) . '>',
-            'Reply-To: ' . $name . ' <' . $email . '>',
-            'Content-Type: text/plain; charset=UTF-8',
-        );
-
-        $admin_email = get_option( 'admin_email' );
+        $headers     = $this->get_mail_headers( $email );
+        $admin_email = sanitize_email( get_option( 'admin_email' ) );
         $send_to     = $admin_email;
 
 	    do_action(
@@ -151,5 +170,88 @@ class ContactForm {
         get_template_part( 'gutenberg-blocks/ContactForm/templates/email', 'content', $email_data );
 
         return ob_get_clean();
+    }
+
+    private function get_post_field( string $key ): string {
+        if ( ! isset( $_POST[ $key ] ) || is_array( $_POST[ $key ] ) ) {
+            return '';
+        }
+
+        return trim( (string) wp_unslash( $_POST[ $key ] ) );
+    }
+
+    private function sanitize_limited_text( string $value, int $max_length ): string {
+        return $this->limit_string( sanitize_text_field( $value ), $max_length );
+    }
+
+    private function sanitize_limited_textarea( string $value, int $max_length ): string {
+        return $this->truncate_string( trim( sanitize_textarea_field( $value ) ), $max_length );
+    }
+
+    private function limit_string( string $value, int $max_length ): string {
+        $value = str_replace( array( "\r", "\n" ), ' ', trim( $value ) );
+
+        return $this->truncate_string( $value, $max_length );
+    }
+
+    private function truncate_string( string $value, int $max_length ): string {
+        if ( function_exists( 'mb_substr' ) ) {
+            return mb_substr( $value, 0, $max_length );
+        }
+
+        return substr( $value, 0, $max_length );
+    }
+
+    private function get_mail_headers( string $reply_to_email ): array {
+        $site_name  = $this->sanitize_header_value( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+        $from_email = $this->get_from_email();
+
+        return array(
+            sprintf( 'From: %s <%s>', $site_name, $from_email ),
+            sprintf( 'Reply-To: %s', $reply_to_email ),
+            'Content-Type: text/plain; charset=UTF-8',
+        );
+    }
+
+    private function get_from_email(): string {
+        $host = wp_parse_url( home_url(), PHP_URL_HOST );
+        $host = is_string( $host ) ? preg_replace( '/[^A-Za-z0-9.-]/', '', $host ) : '';
+
+        if ( ! empty( $host ) ) {
+            $from_email = sanitize_email( 'info@' . $host );
+
+            if ( is_email( $from_email ) ) {
+                return $from_email;
+            }
+        }
+
+        return sanitize_email( get_option( 'admin_email' ) );
+    }
+
+    private function sanitize_header_value( string $value ): string {
+        return trim( str_replace( array( "\r", "\n", '<', '>' ), '', sanitize_text_field( $value ) ) );
+    }
+
+    private function is_post_request(): bool {
+        return isset( $_SERVER['REQUEST_METHOD'] ) && strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) === 'POST';
+    }
+
+    private function is_rate_limited( string $email ): bool {
+        $key   = 'hst_contact_' . wp_hash( $this->get_request_ip() . '|' . strtolower( $email ) );
+        $count = (int) get_transient( $key );
+
+        if ( $count >= self::RATE_LIMIT_MAX ) {
+            return true;
+        }
+
+        set_transient( $key, $count + 1, self::RATE_LIMIT_WINDOW );
+
+        return false;
+    }
+
+    private function get_request_ip(): string {
+        $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+
+        return filter_var( $ip, FILTER_VALIDATE_IP ) ? $ip : 'unknown';
     }
 }

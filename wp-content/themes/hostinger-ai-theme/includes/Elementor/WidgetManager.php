@@ -38,11 +38,13 @@ class WidgetManager {
     }
 
     public function register_widget_scripts(): void {
+        $script_path = get_template_directory() . '/assets/js/elementor-widgets.min.js';
+
         wp_register_script(
             'hostinger-elementor-widgets',
             get_template_directory_uri() . '/assets/js/elementor-widgets.min.js',
             array( 'jquery', 'elementor-frontend' ),
-            wp_get_theme()->get( 'Version' ),
+            file_exists( $script_path ) ? (string) filemtime( $script_path ) : wp_get_theme()->get( 'Version' ),
             true
         );
 

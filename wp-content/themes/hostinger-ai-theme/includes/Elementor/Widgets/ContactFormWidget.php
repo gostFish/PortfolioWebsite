@@ -8,6 +8,11 @@ use Elementor\Controls_Manager;
 defined( 'ABSPATH' ) || exit;
 
 class ContactFormWidget extends Widget_Base {
+    private const MAX_NAME_LENGTH    = 120;
+    private const MAX_EMAIL_LENGTH   = 254;
+    private const MAX_MESSAGE_LENGTH = 5000;
+    private const RATE_LIMIT_MAX     = 5;
+    private const RATE_LIMIT_WINDOW  = 900;
 
     public function get_name(): string {
         return 'hostinger-contact-form';
@@ -261,12 +266,15 @@ class ContactFormWidget extends Widget_Base {
             $privacy_policy_text = sprintf(
                 '%s %s%s%s %s',
                 __( 'I consent to use of provided personal data for the purpose of responding to the request as described in', 'hostinger-ai-theme' ),
-                '<a href="' . esc_url( get_privacy_policy_url() ) . '" target="_blank">',
+                '<a href="' . esc_url( get_privacy_policy_url() ) . '" target="_blank" rel="noopener noreferrer">',
                 __( 'Privacy Policy', 'hostinger-ai-theme' ),
                 '</a>',
                 __( 'which I have read. I may withdraw my consent at any time.', 'hostinger-ai-theme' )
             );
         }
+
+        $recipient_email     = sanitize_email( $settings['recipient_email'] ?? '' );
+        $recipient_signature = is_email( $recipient_email ) ? self::get_recipient_signature( $recipient_email ) : '';
 
         wp_enqueue_script( 'hostinger-contact-form-block' );
         ?>
@@ -282,8 +290,10 @@ class ContactFormWidget extends Widget_Base {
                             <p class="contact-form-description"><?php echo esc_html( $settings['description'] ); ?></p>
                         <?php endif; ?>
 
-                        <form id="<?php echo esc_attr( $form_id ); ?>" data-recipient="<?php echo esc_attr( base64_encode( $settings['recipient_email'] ) ); ?>">
-                            <?php wp_nonce_field( 'hts_submit_contactform', 'contactform_nonce' ); ?>
+                        <form id="<?php echo esc_attr( $form_id ); ?>"
+                              data-recipient="<?php echo esc_attr( is_email( $recipient_email ) ? base64_encode( $recipient_email ) : '' ); ?>"
+                              data-recipient-signature="<?php echo esc_attr( $recipient_signature ); ?>">
+                            <?php wp_nonce_field( 'hts_submit_contactform', 'contactform_nonce', false ); ?>
 
                             <label for="<?php echo esc_attr( $form_id ); ?>-name"><?php echo esc_html( $settings['name_label'] ); ?></label>
                             <input type="text"
@@ -291,6 +301,7 @@ class ContactFormWidget extends Widget_Base {
                                    class="contact-name"
                                    name="name"
                                    placeholder="<?php echo esc_attr( $settings['name_placeholder'] ); ?>"
+                                   maxlength="120"
                                    required>
 
                             <label for="<?php echo esc_attr( $form_id ); ?>-email"><?php echo esc_html( $settings['email_label'] ); ?></label>
@@ -299,6 +310,7 @@ class ContactFormWidget extends Widget_Base {
                                    class="contact-email"
                                    name="email"
                                    placeholder="<?php echo esc_attr( $settings['email_placeholder'] ); ?>"
+                                   maxlength="254"
                                    required>
 
                             <?php if ( 'yes' === $settings['show_date'] ) : ?>
@@ -316,7 +328,17 @@ class ContactFormWidget extends Widget_Base {
                                       class="contact-message"
                                       name="message"
                                       placeholder="<?php echo esc_attr( $settings['message_placeholder'] ); ?>"
+                                      maxlength="5000"
                                       required></textarea>
+
+                            <div class="form-field honeypot-field" style="display:none;" aria-hidden="true">
+                                <label for="<?php echo esc_attr( $form_id ); ?>-website-url"><?php esc_html_e( 'Website', 'hostinger-ai-theme' ); ?></label>
+                                <input type="text"
+                                       id="<?php echo esc_attr( $form_id ); ?>-website-url"
+                                       name="website_url"
+                                       autocomplete="off"
+                                       tabindex="-1">
+                            </div>
 
                             <div class="hts-privacy-agree">
                                 <label class="hts-form-control">
@@ -342,19 +364,36 @@ class ContactFormWidget extends Widget_Base {
     public static function handle_contact_submit(): void {
         check_ajax_referer( 'hts_submit_contactform', 'nonce' );
 
-        $name             = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
-        $email            = isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
-        $date             = isset( $_POST['date'] ) ? sanitize_text_field( $_POST['date'] ) : '';
-        $privacy_policy   = isset( $_POST['privacy_policy'] ) ? sanitize_text_field( $_POST['privacy_policy'] ) : '';
-        $form_message     = isset( $_POST['message'] ) ? sanitize_text_field( $_POST['message'] ) : '';
-        $recipient_email  = isset( $_POST['recipient_email'] ) ? sanitize_email( $_POST['recipient_email'] ) : '';
+        if ( ! self::is_post_request() ) {
+            wp_send_json_error( array( 'message' => __( 'Invalid request.', 'hostinger-ai-theme' ) ), 405 );
+        }
+
+        if ( self::get_post_field( 'website_url' ) !== '' ) {
+            wp_send_json_success( array( 'message' => __( 'Successfully submitted!', 'hostinger-ai-theme' ) ) );
+        }
+
+        $name                = self::sanitize_limited_text( self::get_post_field( 'name' ), self::MAX_NAME_LENGTH );
+        $email               = sanitize_email( self::get_post_field( 'email' ) );
+        $date                = self::sanitize_date( self::get_post_field( 'date' ) );
+        $privacy_policy      = sanitize_text_field( self::get_post_field( 'privacy_policy' ) );
+        $form_message        = self::sanitize_limited_textarea( self::get_post_field( 'message' ), self::MAX_MESSAGE_LENGTH );
+        $recipient_email     = sanitize_email( self::get_post_field( 'recipient_email' ) );
+        $recipient_signature = self::get_post_field( 'recipient_signature' );
 
         if ( $privacy_policy !== 'on' ) {
             wp_send_json_error( array( 'message' => __( 'Please agree with privacy policy.', 'hostinger-ai-theme' ) ) );
         }
 
-        if ( ! is_email( $email ) ) {
+        if ( empty( $name ) || empty( $form_message ) ) {
+            wp_send_json_error( array( 'message' => __( 'Please fill in all required fields.', 'hostinger-ai-theme' ) ) );
+        }
+
+        if ( strlen( $email ) > self::MAX_EMAIL_LENGTH || ! is_email( $email ) ) {
             wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'hostinger-ai-theme' ) ) );
+        }
+
+        if ( self::is_rate_limited( $email ) ) {
+            wp_send_json_error( array( 'message' => __( 'Please wait a few minutes before trying again.', 'hostinger-ai-theme' ) ), 429 );
         }
 
         $subject = __( 'New Contact Form Submission', 'hostinger-ai-theme' );
@@ -368,14 +407,14 @@ class ContactFormWidget extends Widget_Base {
 
         $message = self::get_email_content( $email_data );
 
-        $headers = array(
-            'From: ' . get_bloginfo( 'name' ) . ' <info@' . parse_url( home_url(), PHP_URL_HOST ) . '>',
-            'Reply-To: ' . $name . ' <' . $email . '>',
-            'Content-Type: text/plain; charset=UTF-8',
-        );
+        $headers = self::get_mail_headers( $email );
 
-        $admin_email = get_option( 'admin_email' );
-        $send_to     = ! empty( $recipient_email ) && is_email( $recipient_email ) ? $recipient_email : $admin_email;
+        $admin_email = sanitize_email( get_option( 'admin_email' ) );
+        $send_to     = $admin_email;
+
+        if ( is_email( $recipient_email ) && self::is_valid_recipient_signature( $recipient_email, $recipient_signature ) ) {
+            $send_to = $recipient_email;
+        }
 
         if ( is_email( $send_to ) && wp_mail( $send_to, $subject, $message, $headers ) ) {
             wp_send_json_success( array( 'message' => __( 'Successfully submitted!', 'hostinger-ai-theme' ) ) );
@@ -392,5 +431,105 @@ class ContactFormWidget extends Widget_Base {
 
         return ob_get_clean();
     }
-}
 
+    private static function get_post_field( string $key ): string {
+        if ( ! isset( $_POST[ $key ] ) || is_array( $_POST[ $key ] ) ) {
+            return '';
+        }
+
+        return trim( (string) wp_unslash( $_POST[ $key ] ) );
+    }
+
+    private static function sanitize_limited_text( string $value, int $max_length ): string {
+        return self::limit_string( sanitize_text_field( $value ), $max_length );
+    }
+
+    private static function sanitize_limited_textarea( string $value, int $max_length ): string {
+        return self::truncate_string( trim( sanitize_textarea_field( $value ) ), $max_length );
+    }
+
+    private static function limit_string( string $value, int $max_length ): string {
+        $value = str_replace( array( "\r", "\n" ), ' ', trim( $value ) );
+
+        return self::truncate_string( $value, $max_length );
+    }
+
+    private static function truncate_string( string $value, int $max_length ): string {
+        if ( function_exists( 'mb_substr' ) ) {
+            return mb_substr( $value, 0, $max_length );
+        }
+
+        return substr( $value, 0, $max_length );
+    }
+
+    private static function sanitize_date( string $value ): string {
+        $value = sanitize_text_field( $value );
+
+        return preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) ? $value : '';
+    }
+
+    private static function get_mail_headers( string $reply_to_email ): array {
+        $site_name  = self::sanitize_header_value( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+        $from_email = self::get_from_email();
+
+        return array(
+            sprintf( 'From: %s <%s>', $site_name, $from_email ),
+            sprintf( 'Reply-To: %s', $reply_to_email ),
+            'Content-Type: text/plain; charset=UTF-8',
+        );
+    }
+
+    private static function get_from_email(): string {
+        $host = wp_parse_url( home_url(), PHP_URL_HOST );
+        $host = is_string( $host ) ? preg_replace( '/[^A-Za-z0-9.-]/', '', $host ) : '';
+
+        if ( ! empty( $host ) ) {
+            $from_email = sanitize_email( 'info@' . $host );
+
+            if ( is_email( $from_email ) ) {
+                return $from_email;
+            }
+        }
+
+        return sanitize_email( get_option( 'admin_email' ) );
+    }
+
+    private static function sanitize_header_value( string $value ): string {
+        return trim( str_replace( array( "\r", "\n", '<', '>' ), '', sanitize_text_field( $value ) ) );
+    }
+
+    private static function get_recipient_signature( string $recipient_email ): string {
+        return wp_hash( 'hostinger_elementor_contact_recipient|' . strtolower( $recipient_email ) );
+    }
+
+    private static function is_valid_recipient_signature( string $recipient_email, string $signature ): bool {
+        if ( empty( $signature ) ) {
+            return false;
+        }
+
+        return hash_equals( self::get_recipient_signature( $recipient_email ), $signature );
+    }
+
+    private static function is_post_request(): bool {
+        return isset( $_SERVER['REQUEST_METHOD'] ) && strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) === 'POST';
+    }
+
+    private static function is_rate_limited( string $email ): bool {
+        $key   = 'hst_elementor_contact_' . wp_hash( self::get_request_ip() . '|' . strtolower( $email ) );
+        $count = (int) get_transient( $key );
+
+        if ( $count >= self::RATE_LIMIT_MAX ) {
+            return true;
+        }
+
+        set_transient( $key, $count + 1, self::RATE_LIMIT_WINDOW );
+
+        return false;
+    }
+
+    private static function get_request_ip(): string {
+        $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+
+        return filter_var( $ip, FILTER_VALIDATE_IP ) ? $ip : 'unknown';
+    }
+}

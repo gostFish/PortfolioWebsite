@@ -16,7 +16,7 @@ if ( empty( $privacy_policy_text ) ) {
     $privacy_policy_text = sprintf(
         '%s %s%s%s %s',
         __( 'I consent to use of provided personal data for the purpose of responding to the request as described in', 'hostinger-ai-theme' ),
-        '<a href="' . esc_url( get_privacy_policy_url() ) . '" target="_blank">',
+        '<a href="' . esc_url( get_privacy_policy_url() ) . '" target="_blank" rel="noopener noreferrer">',
         __( 'Privacy Policy', 'hostinger-ai-theme' ),
         '</a>',
         __( 'which I have read. I may withdraw my consent at any time.', 'hostinger-ai-theme' )
@@ -41,7 +41,7 @@ if ( empty( $privacy_policy_text ) ) {
 
                 <form id="<?php echo esc_attr( $form_id ); ?>">
                     <?php
-                    wp_nonce_field( 'submit_contactform', 'contactform_nonce' );
+                    wp_nonce_field( 'submit_contactform', 'contactform_nonce', false );
                     ?>
 
                     <label for="<?php echo esc_attr( $form_id ); ?>-name"><?php echo esc_html( $attributes['nameLabel'] ); ?></label>
@@ -50,6 +50,7 @@ if ( empty( $privacy_policy_text ) ) {
                             class="contact-name"
                             name="name"
                             placeholder="<?php echo esc_attr( $attributes['namePlaceholder'] ); ?>"
+                            maxlength="120"
                             required>
 
                     <label for="<?php echo esc_attr( $form_id ); ?>-email"><?php echo esc_html( $attributes['emailLabel'] ); ?></label>
@@ -58,6 +59,7 @@ if ( empty( $privacy_policy_text ) ) {
                             class="contact-email"
                             name="email"
                             placeholder="<?php echo esc_attr( $attributes['emailPlaceholder'] ); ?>"
+                            maxlength="254"
                             required>
 
                     <label for="<?php echo esc_attr( $form_id ); ?>-message">
@@ -69,7 +71,17 @@ if ( empty( $privacy_policy_text ) ) {
                                 class="contact-message"
                                 name="message"
                                 placeholder="<?php echo esc_attr( $attributes['messagePlaceholder'] ); ?>"
+                                maxlength="5000"
                                 required></textarea>
+
+                    <div class="form-field honeypot-field" style="display:none;" aria-hidden="true">
+                        <label for="<?php echo esc_attr( $form_id ); ?>-website-url"><?php esc_html_e( 'Website', 'hostinger-ai-theme' ); ?></label>
+                        <input type="text"
+                                id="<?php echo esc_attr( $form_id ); ?>-website-url"
+                                name="website_url"
+                                autocomplete="off"
+                                tabindex="-1">
+                    </div>
 
                     <div class="validate-message"></div>
 
