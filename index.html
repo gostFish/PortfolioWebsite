@@ -251,7 +251,9 @@
         .email-toggle:hover,
         .email-toggle:focus-visible,
         .load-more:hover,
-        .load-more:focus-visible {
+        .load-more:focus-visible,
+        .show-less:hover,
+        .show-less:focus-visible {
             transform: translateY(-1px);
         }
 
@@ -264,7 +266,8 @@
 
         .secondary,
         .reveal-button,
-        .load-more {
+        .load-more,
+        .show-less {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--line);
             color: var(--text);
@@ -354,6 +357,7 @@
         .metrics,
         .grid,
         .project-grid,
+        .game-feature-grid,
         .game-grid {
             display: grid;
             gap: 14px;
@@ -373,6 +377,31 @@
             grid-template-columns: repeat(2, 1fr);
         }
 
+        .game-sections {
+            display: grid;
+            gap: 16px;
+        }
+
+        .game-group {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 18px;
+        }
+
+        .subsection-header h3 {
+            color: var(--text);
+            font-size: 1rem;
+            margin: 0 0 6px;
+        }
+
+        .subsection-header p {
+            margin-top: 0;
+        }
+
+        .game-feature-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
         .game-grid {
             grid-template-columns: repeat(3, 1fr);
         }
@@ -385,6 +414,56 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 20px;
             padding: 18px;
+        }
+
+        .game-item {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .game-item.link:hover,
+        .game-item.link:focus-visible {
+            border-color: rgba(34, 211, 238, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .game-item.feature {
+            align-items: center;
+            display: grid;
+            gap: 14px;
+            grid-template-columns: 72px 1fr;
+        }
+
+        .game-logo-wrap {
+            align-items: center;
+            aspect-ratio: 1;
+            background: rgba(4, 8, 20, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            padding: 8px;
+        }
+
+        .game-logo {
+            display: block;
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .game-logo.square {
+            border-radius: 12px;
+            height: 100%;
+            width: 100%;
+        }
+
+        .list-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
         }
 
         .metric strong,
@@ -462,6 +541,7 @@
             .metrics,
             .grid,
             .project-grid,
+            .game-feature-grid,
             .game-grid {
                 grid-template-columns: 1fr;
             }
@@ -603,26 +683,67 @@
                     <div class="section-header">
                         <div>
                             <h2>Game and Interactive Project List</h2>
-                            <p>All entries are present but tucked away. Use the button to reveal them in small increments.</p>
+                            <p>Professional releases are highlighted first. Open the section for the full list, then expand or reduce the smaller projects.</p>
                         </div>
-                        <button class="load-more" type="button" data-reveal-count="4" aria-controls="game-list">Show 4 projects</button>
+                        <button class="reveal-button" type="button" aria-expanded="false" aria-controls="game-details">Open games</button>
                     </div>
-                    <div class="game-grid" id="game-list">
-                        <div class="game-item" hidden><strong>Lemmings</strong><span>Professional Unity project work at Exient.</span></div>
-                        <div class="game-item" hidden><strong>Angry Birds Fury Road</strong><span>Professional Unity project work at Exient.</span></div>
-                        <div class="game-item" hidden><strong>CUE - PC Port</strong><span>Professional porting and production support.</span></div>
-                        <div class="game-item" hidden><strong>Subway Surfers+ - Apple Arcade Port</strong><span>Professional porting and production support.</span></div>
-                        <div class="game-item" hidden><strong>Undisclosed AAA Game / Shrapnel Pre-Alpha</strong><span>Sperasoft internship work around Unreal Engine production practices.</span></div>
-                        <div class="game-item" hidden><strong>You're Dead Meat</strong><span>2024 Malta Global Game Jam multiplayer platformer fighter.</span></div>
-                        <div class="game-item" hidden><strong>Infosec Awareness Game</strong><span>LeoVegas internal information security education game with dialog and minigames.</span></div>
-                        <div class="game-item" hidden><strong>Darwin's Vanguard</strong><span>2023 AI and Games conference game jam tower defence with learning enemy AI agents.</span></div>
-                        <div class="game-item" hidden><strong>Root2</strong><span>2022 Malta Global Game Jam two-player co-op vertical scrolling endless runner.</span></div>
-                        <div class="game-item" hidden><strong>Dungeon Master</strong><span>2022 AI and Games game jam procedurally generated platformer with evolving collectables.</span></div>
-                        <div class="game-item" hidden><strong>Adrift</strong><span>2022 group assignment, narrative first-person fishing survival game.</span></div>
-                        <div class="game-item" hidden><strong>Dungeon of Stonefang</strong><span>2021 game engines assignment, rogue-like dungeon crawler.</span></div>
-                        <div class="game-item" hidden><strong>Savings</strong><span>2020 GEMMA Financial Capability Game Design Competition, life-economy visual novel made in Ren'Py.</span></div>
-                        <div class="game-item" hidden><strong>Final Frontier</strong><span>2020 Advanced Game AI assignment, vertical scrolling 2D shooter.</span></div>
-                        <div class="game-item" hidden><strong>Deep Blue</strong><span>2019 University of Malta AI GameJam side-scrolling survival game.</span></div>
+                    <div class="reveal-panel" id="game-details">
+                        <div class="game-sections">
+                            <section class="game-group" aria-labelledby="professional-games-title">
+                                <div class="subsection-header">
+                                    <h3 id="professional-games-title">Professional Games</h3>
+                                    <p>Commercial releases, ports, and pre-alpha production support.</p>
+                                </div>
+                                <div class="game-feature-grid">
+                                    <a class="game-item link feature" href="https://play.google.com/store/apps/details?id=com.sadpuppy.lemmings" target="_blank" rel="noreferrer">
+                                        <div class="game-logo-wrap">
+                                            <img class="game-logo square" src="wp-content/themes/hostinger-ai-theme/assets/images/portfolio/lemmings-icon.jpg" alt="Lemmings logo">
+                                        </div>
+                                        <div>
+                                            <strong>Lemmings</strong>
+                                            <span>Professional Unity project work at Exient.</span>
+                                        </div>
+                                    </a>
+                                    <a class="game-item link feature" href="https://angrybirds.fandom.com/wiki/Angry_Birds_Fury_Road" target="_blank" rel="noreferrer">
+                                        <div class="game-logo-wrap">
+                                            <img class="game-logo" src="wp-content/themes/hostinger-ai-theme/assets/images/portfolio/angry-birds-fury-road-logo.png" alt="Angry Birds Fury Road logo">
+                                        </div>
+                                        <div>
+                                            <strong>Angry Birds Fury Road</strong>
+                                            <span>Professional Unity project work at Exient.</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="game-grid">
+                                    <a class="game-item link" href="https://store.steampowered.com/app/3411830/Cards_the_Universe_and_Everything/" target="_blank" rel="noreferrer"><strong>CUE - PC Port</strong><span>Professional porting and production support.</span></a>
+                                    <a class="game-item link" href="https://apps.apple.com/us/app/subway-surfers/id6744608300" target="_blank" rel="noreferrer"><strong>Subway Surfers+</strong><span>Professional porting and production support.</span></a>
+                                    <a class="game-item link" href="https://www.shrapnel.com" target="_blank" rel="noreferrer"><strong>Shrapnel Pre-Alpha</strong><span>Sperasoft internship work around Unreal Engine production practices.</span></a>
+                                </div>
+                            </section>
+
+                            <section class="game-group" aria-labelledby="smaller-games-title">
+                                <div class="subsection-header">
+                                    <h3 id="smaller-games-title">Game Jams and Smaller Projects</h3>
+                                    <p>Less-emphasised archive of jams, coursework, and internal interactive work.</p>
+                                </div>
+                                <div class="game-grid" id="game-list">
+                                    <a class="game-item link" href="https://github.com/gostFish/Youre_Dead_Meat" target="_blank" rel="noreferrer"><strong>You're Dead Meat</strong><span>2024 Malta Global Game Jam multiplayer platformer fighter.</span></a>
+                                    <div class="game-item"><strong>Infosec Awareness Game</strong><span>LeoVegas internal information security education game with dialog and minigames.</span></div>
+                                    <div class="game-item"><strong>Darwin's Vanguard</strong><span>2023 AI and Games conference game jam tower defence with learning enemy AI agents.</span></div>
+                                    <a class="game-item link" href="https://github.com/gostFish/Root2" target="_blank" rel="noreferrer"><strong>Root2</strong><span>2022 Malta Global Game Jam two-player co-op vertical scrolling endless runner.</span></a>
+                                    <div class="game-item" hidden><strong>Dungeon Master</strong><span>2022 AI and Games game jam procedurally generated platformer with evolving collectables.</span></div>
+                                    <a class="game-item link" href="https://github.com/gostFish/Adrift" target="_blank" rel="noreferrer" hidden><strong>Adrift</strong><span>2022 group assignment, narrative first-person fishing survival game.</span></a>
+                                    <a class="game-item link" href="https://github.com/gostFish/DungeonsOfStonefang" target="_blank" rel="noreferrer" hidden><strong>Dungeon of Stonefang</strong><span>2021 game engines assignment, rogue-like dungeon crawler.</span></a>
+                                    <a class="game-item link" href="https://github.com/gostFish/Savings" target="_blank" rel="noreferrer" hidden><strong>Savings</strong><span>2020 GEMMA Financial Capability Game Design Competition, life-economy visual novel made in Ren'Py.</span></a>
+                                    <div class="game-item" hidden><strong>Final Frontier</strong><span>2020 Advanced Game AI assignment, vertical scrolling 2D shooter.</span></div>
+                                    <div class="game-item" hidden><strong>Deep Blue</strong><span>2019 University of Malta AI GameJam side-scrolling survival game.</span></div>
+                                </div>
+                                <div class="list-controls">
+                                    <button class="load-more" type="button" data-reveal-count="4" data-initial-count="4" aria-controls="game-list">Show more projects</button>
+                                    <button class="show-less" type="button" data-initial-count="4" aria-controls="game-list">Show less</button>
+                                </div>
+                            </section>
+                        </div>
                     </div>
                 </article>
 
@@ -630,29 +751,81 @@
                     <div class="section-header">
                         <div>
                             <h2>Education and Skills</h2>
-                            <p>MSc in Digital Games and BSc in AI from the University of Malta. Click for a fuller summary.</p>
+                            <p>University of Malta training in AI and digital games, supported by long-term interests that build discipline, creativity, and focus.</p>
                         </div>
-                        <button class="reveal-button" type="button" aria-expanded="false" aria-controls="education-details">Reveal education</button>
+                        <button class="reveal-button" type="button" aria-expanded="false" aria-controls="education-details">Reveal details</button>
                     </div>
                     <div class="reveal-panel" id="education-details">
-                        <div>
-                            <p>
-                                Academic work spans game studies, game engines, game design, player modelling,
-                                machine learning, computer vision, neural network training, data processing,
-                                reinforcement learning, compiler theory, AI history, and AI applications.
-                            </p>
-                            <div class="tag-row" aria-label="skills">
-                                <span class="tag">C#</span>
-                                <span class="tag">Unity</span>
-                                <span class="tag">C++</span>
-                                <span class="tag">Unreal Engine</span>
-                                <span class="tag">Python</span>
-                                <span class="tag">HTML/CSS</span>
-                                <span class="tag">PHP</span>
-                                <span class="tag">AI and Games</span>
-                                <span class="tag">Computer Vision</span>
-                                <span class="tag">Japanese B1</span>
-                            </div>
+                        <div class="game-sections">
+                            <section class="game-group" aria-labelledby="education-summary-title">
+                                <p>
+                                    My academic path combines a strong artificial intelligence foundation with advanced game development study,
+                                    giving me both the technical grounding to build intelligent systems and the design awareness to create
+                                    purposeful interactive experiences.
+                                </p>
+                                <div class="subsection-header">
+                                    <h3 id="education-summary-title">Education</h3>
+                                    <p>Each degree sharpened a different side of my profile: intelligent systems, practical development, and research-led problem solving.</p>
+                                </div>
+                                <div class="project-grid">
+                                    <div class="project-card">
+                                        <h3>Master of Science in Digital Games</h3>
+                                        <p>Started in 2021. A 90 ECTS postgraduate programme at the University of Malta focused on designing, developing, and critically evaluating digital games. It strengthened my work in game creation, production awareness, and research, and directly supported my RTS gameplay thesis work.</p>
+                                        <p><a href="https://www.um.edu.mt/courses/overview/pmscdtgftt3-2026-7-o/" target="_blank" rel="noreferrer">View course overview</a></p>
+                                    </div>
+                                    <div class="project-card">
+                                        <h3>Bachelor of Science in Information Technology (Honours) (Artificial Intelligence)</h3>
+                                        <p>Started in 2018. A 180 ECTS University of Malta degree that built my computer science and AI core across machine learning, computer vision, reinforcement learning, knowledge systems, natural language processing, and game AI, shaping the way I approach both software and interactive problem-solving.</p>
+                                        <p><a href="https://www.um.edu.mt/courses/overview/ubscitharift-2026-7-o/" target="_blank" rel="noreferrer">View course overview</a></p>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="game-group" aria-labelledby="skills-interests-title">
+                                <div class="subsection-header">
+                                    <h3 id="skills-interests-title">Skills and Interests</h3>
+                                    <p>These disciplines outside software reinforce patience, precision, resilience, and craft.</p>
+                                </div>
+                                <div class="project-grid">
+                                    <div class="project-card">
+                                        <h3>Archery</h3>
+                                        <p>An interest and practical proficiency in a precision-based discipline that rewards control, consistency, and calm execution under pressure.</p>
+                                        <p><a href="https://www.malta-archery.com" target="_blank" rel="noreferrer">Malta Archery Association</a></p>
+                                    </div>
+                                    <div class="project-card">
+                                        <h3>Trekking</h3>
+                                        <p>A long-term interest that builds endurance, planning, and persistence, with the same steady mindset that helps on longer technical projects.</p>
+                                        <p><a href="https://intaward.mt" target="_blank" rel="noreferrer">International Award Malta</a></p>
+                                    </div>
+                                    <div class="project-card">
+                                        <h3>Kendo</h3>
+                                        <p>An interest in disciplined martial arts practice, emphasizing timing, form, respect, and continuous improvement.</p>
+                                        <p><a href="https://www.facebook.com/MaltaKodokanJuniorsKendo/" target="_blank" rel="noreferrer">Malta Kodokan Juniors Kendo</a></p>
+                                    </div>
+                                    <div class="project-card">
+                                        <h3>Sewing</h3>
+                                        <p>A hands-on creative skill that sharpens patience, detail orientation, and craftsmanship, including hobby work connected to costumes and event culture.</p>
+                                        <p><a href="https://maltacomiccon.com" target="_blank" rel="noreferrer">Malta Comic Con</a></p>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="game-group" aria-labelledby="technical-foundations-title">
+                                <div class="subsection-header">
+                                    <h3 id="technical-foundations-title">Technical Foundations</h3>
+                                    <p>Core tools and topics that connect my studies with day-to-day delivery work.</p>
+                                </div>
+                                <div class="tag-row" aria-label="technical skills">
+                                    <span class="tag">C#</span>
+                                    <span class="tag">Unity</span>
+                                    <span class="tag">C++</span>
+                                    <span class="tag">Unreal Engine</span>
+                                    <span class="tag">Python</span>
+                                    <span class="tag">HTML/CSS</span>
+                                    <span class="tag">PHP</span>
+                                    <span class="tag">AI and Games</span>
+                                    <span class="tag">Computer Vision</span>
+                                    <span class="tag">Japanese B1</span>
+                                </div>
+                            </section>
                         </div>
                     </div>
                 </article>
@@ -713,23 +886,47 @@ Best regards,</textarea>
         document.querySelectorAll(".load-more").forEach(function (button) {
             var list = document.getElementById(button.getAttribute("aria-controls"));
             var increment = Number(button.getAttribute("data-reveal-count")) || 4;
+            var initialCount = Number(button.getAttribute("data-initial-count")) || 4;
+            var controls = button.closest(".list-controls");
+            var showLessButton = controls ? controls.querySelector('.show-less[aria-controls="' + button.getAttribute("aria-controls") + '"]') : null;
 
             if (!list) {
                 return;
+            }
+
+            function items() {
+                return Array.from(list.querySelectorAll(".game-item"));
             }
 
             function updateButton() {
                 var hiddenItems = list.querySelectorAll(".game-item[hidden]");
                 button.textContent = hiddenItems.length ? "Show " + Math.min(increment, hiddenItems.length) + " more projects" : "All projects shown";
                 button.disabled = hiddenItems.length === 0;
+
+                if (showLessButton) {
+                    showLessButton.disabled = items().filter(function (item) {
+                        return !item.hidden;
+                    }).length <= initialCount;
+                }
             }
 
             button.addEventListener("click", function () {
-                Array.from(list.querySelectorAll(".game-item[hidden]")).slice(0, increment).forEach(function (item) {
+                items().filter(function (item) {
+                    return item.hidden;
+                }).slice(0, increment).forEach(function (item) {
                     item.hidden = false;
                 });
                 updateButton();
             });
+
+            if (showLessButton) {
+                showLessButton.addEventListener("click", function () {
+                    items().forEach(function (item, index) {
+                        item.hidden = index >= initialCount;
+                    });
+                    updateButton();
+                });
+            }
 
             updateButton();
         });
