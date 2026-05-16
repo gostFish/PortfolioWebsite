@@ -352,7 +352,7 @@ body.home .landing-hero {
     align-items: stretch;
     display: grid;
     gap: 24px;
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 1.05fr 0.95fr;
     padding: 72px 0 28px;
 }
 
@@ -462,6 +462,10 @@ body.home .landing-card {
     padding: 22px;
 }
 
+body.home .landing-glance-card {
+    padding: 24px;
+}
+
 body.home .landing-card h2,
 body.home .landing-section h2 {
     font-size: 1.15rem;
@@ -482,6 +486,10 @@ body.home .landing-metrics {
     grid-template-columns: repeat(3, 1fr);
 }
 
+body.home .landing-glance-card .landing-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 body.home .landing-metric {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -499,6 +507,10 @@ body.home .landing-metric span {
     color: #a7b4c7;
     font-size: 0.93rem;
     line-height: 1.5;
+}
+
+body.home .landing-glance-card .landing-metric:last-child {
+    grid-column: 1 / -1;
 }
 
 body.home .landing-sections {

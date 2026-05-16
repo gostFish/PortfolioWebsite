@@ -152,7 +152,7 @@
             align-items: stretch;
             display: grid;
             gap: 24px;
-            grid-template-columns: 1.08fr 0.92fr;
+            grid-template-columns: 1.04fr 0.96fr;
             padding: 72px 0 28px;
         }
 
@@ -281,6 +281,10 @@
             padding: 22px;
         }
 
+        .glance-card {
+            padding: 24px;
+        }
+
         .portrait-card {
             overflow: hidden;
             padding: 0;
@@ -361,6 +365,10 @@
             grid-template-columns: repeat(3, 1fr);
         }
 
+        .glance-card .metrics {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
         .project-grid {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -387,6 +395,10 @@
             display: block;
             font-size: 1rem;
             margin: 0 0 8px;
+        }
+
+        .glance-card .metric:last-child {
+            grid-column: 1 / -1;
         }
 
         .metric span,
@@ -514,7 +526,7 @@
                         <img src="wp-content/uploads/portfolio/malcolm-grech-cv-picture.jpg" alt="Portrait of Malcolm Grech">
                     </article>
 
-                    <article class="card">
+                    <article class="card glance-card">
                         <h2>At a glance</h2>
                         <div class="metrics" aria-label="profile highlights">
                             <div class="metric">
