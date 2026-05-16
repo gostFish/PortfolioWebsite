@@ -673,6 +673,154 @@ body.home .landing-footer {
         flex-direction: column;
     }
 }
+
+body.home .landing-button,
+body.home .landing-reveal-button,
+body.home .landing-email-toggle,
+body.home .landing-load-more {
+    align-items: center;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    font-weight: 700;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 18px;
+    text-decoration: none;
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+body.home .landing-button:hover,
+body.home .landing-button:focus-visible,
+body.home .landing-reveal-button:hover,
+body.home .landing-reveal-button:focus-visible,
+body.home .landing-email-toggle:hover,
+body.home .landing-email-toggle:focus-visible,
+body.home .landing-load-more:hover,
+body.home .landing-load-more:focus-visible {
+    transform: translateY(-1px);
+}
+
+body.home .landing-button--primary,
+body.home .landing-email-toggle {
+    background: linear-gradient(135deg, #22d3ee, #8ee8f3);
+    border: 0;
+    color: #04111d;
+}
+
+body.home .landing-button--secondary,
+body.home .landing-reveal-button,
+body.home .landing-load-more {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(167, 180, 199, 0.18);
+    color: #f4f7fb;
+}
+
+body.home .landing-portrait-card {
+    overflow: hidden;
+    padding: 0;
+}
+
+body.home .landing-portrait-card img {
+    aspect-ratio: 4 / 5;
+    display: block;
+    height: 100%;
+    min-height: 420px;
+    object-fit: cover;
+    object-position: center 16%;
+    width: 100%;
+}
+
+body.home .landing-section-header {
+    align-items: flex-start;
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+}
+
+body.home .landing-reveal-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transition: grid-template-rows 320ms ease, opacity 240ms ease, margin-top 320ms ease, visibility 0s linear 320ms;
+    visibility: hidden;
+}
+
+body.home .landing-reveal-panel.is-open {
+    grid-template-rows: 1fr;
+    margin-top: 18px;
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0s;
+    visibility: visible;
+}
+
+body.home .landing-reveal-panel > div {
+    min-height: 0;
+}
+
+body.home .landing-game-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 18px;
+}
+
+body.home .landing-game-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    padding: 18px;
+}
+
+body.home .landing-game-item[hidden] {
+    display: none;
+}
+
+body.home .landing-game-item strong {
+    color: #f4f7fb;
+    display: block;
+    font-size: 1rem;
+    margin: 0 0 8px;
+}
+
+body.home .landing-game-item span {
+    color: #a7b4c7;
+    display: block;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+body.home .landing-contact-panel textarea {
+    background: rgba(4, 8, 20, 0.72);
+    border: 1px solid rgba(167, 180, 199, 0.2);
+    border-radius: 14px;
+    color: #f4f7fb;
+    font: inherit;
+    line-height: 1.6;
+    margin-top: 14px;
+    min-height: 150px;
+    padding: 14px;
+    resize: vertical;
+    width: 100%;
+}
+
+@media (max-width: 880px) {
+    body.home .landing-section-header {
+        flex-direction: column;
+    }
+
+    body.home .landing-game-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.home .landing-portrait-card img {
+        min-height: 0;
+        max-height: 520px;
+    }
+}
 CSS;
 
             wp_add_inline_style( 'hostinger-ai-style', $landing_home_css );
@@ -785,9 +933,8 @@ document.addEventListener('DOMContentLoaded', function () {
         buildProjectCard(findProjectCard(titleNode));
     });
 
-    document.querySelectorAll('.landing-gamejam-card').forEach(function (card) {
-        const button = card.querySelector('.landing-icon-button');
-        const panel = card.querySelector('.landing-gamejam-panel');
+    document.querySelectorAll('.landing-reveal-button, .landing-email-toggle').forEach(function (button) {
+        const panel = document.getElementById(button.getAttribute('aria-controls'));
 
         if (!button || !panel) {
             return;
@@ -796,9 +943,32 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             const isOpen = button.getAttribute('aria-expanded') === 'true';
             button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-            button.textContent = isOpen ? '+' : 'x';
-            panel.hidden = isOpen;
+            panel.classList.toggle('is-open', !isOpen);
         });
+    });
+
+    document.querySelectorAll('.landing-load-more').forEach(function (button) {
+        const list = document.getElementById(button.getAttribute('aria-controls'));
+        const increment = Number(button.getAttribute('data-reveal-count')) || 4;
+
+        if (!list) {
+            return;
+        }
+
+        function updateButton() {
+            const hiddenItems = list.querySelectorAll('.landing-game-item[hidden]');
+            button.textContent = hiddenItems.length ? 'Show ' + Math.min(increment, hiddenItems.length) + ' more projects' : 'All projects shown';
+            button.disabled = hiddenItems.length === 0;
+        }
+
+        button.addEventListener('click', function () {
+            Array.from(list.querySelectorAll('.landing-game-item[hidden]')).slice(0, increment).forEach(function (item) {
+                item.hidden = false;
+            });
+            updateButton();
+        });
+
+        updateButton();
     });
 });
 JS;

@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Malcolm Grech | Game Developer</title>
-    <meta name="description" content="Portfolio landing page for Malcolm Grech, a Malta-based game developer working across Unity, Unreal Engine, gameplay, tools, and game AI.">
+    <title>Malcolm Grech | Software, AI & Interactive Systems</title>
+    <meta name="description" content="Portfolio landing page for Malcolm Grech, a Malta-based software developer working across Unity, Unreal Engine, AI, tools, gameplay systems, and web technologies.">
     <style>
         @font-face {
             font-family: "DM Sans";
@@ -34,7 +34,6 @@
             color-scheme: dark;
             --bg: #07111f;
             --panel: rgba(10, 19, 34, 0.78);
-            --panel-strong: rgba(11, 18, 32, 0.92);
             --text: #f4f7fb;
             --muted: #a7b4c7;
             --line: rgba(167, 180, 199, 0.18);
@@ -83,6 +82,11 @@
             color: inherit;
         }
 
+        button,
+        textarea {
+            font: inherit;
+        }
+
         .wrap {
             margin: 0 auto;
             padding: 24px 0 40px;
@@ -127,23 +131,28 @@
             width: 34px;
         }
 
-        .badge {
+        .badge,
+        .eyebrow {
             align-items: center;
+            border-radius: 999px;
+            display: inline-flex;
+            letter-spacing: 0;
+            white-space: nowrap;
+        }
+
+        .badge {
             background: rgba(34, 211, 238, 0.12);
             border: 1px solid rgba(34, 211, 238, 0.22);
-            border-radius: 999px;
             color: #d9fbff;
-            display: inline-flex;
             font-size: 0.92rem;
             padding: 10px 14px;
-            white-space: nowrap;
         }
 
         .hero {
             align-items: stretch;
             display: grid;
             gap: 24px;
-            grid-template-columns: 1.15fr 0.85fr;
+            grid-template-columns: 1.08fr 0.92fr;
             padding: 72px 0 28px;
         }
 
@@ -176,25 +185,27 @@
         }
 
         .eyebrow {
-            align-items: center;
             background: rgba(139, 92, 246, 0.14);
             border: 1px solid rgba(139, 92, 246, 0.24);
-            border-radius: 999px;
             color: #efe7ff;
-            display: inline-flex;
             font-size: 0.9rem;
             gap: 10px;
-            letter-spacing: 0;
             padding: 9px 14px;
         }
 
         h1 {
             font-family: "DM Serif Display", serif;
-            font-size: 5.7rem;
+            font-size: 5.35rem;
             letter-spacing: 0;
             line-height: 0.95;
             margin: 18px 0 16px;
             max-width: 11ch;
+        }
+
+        h2,
+        h3,
+        p {
+            margin-top: 0;
         }
 
         .lede {
@@ -206,7 +217,8 @@
         }
 
         .actions,
-        .contact-row {
+        .contact-row,
+        .section-controls {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
@@ -216,9 +228,13 @@
             margin-top: 28px;
         }
 
-        .button {
+        .button,
+        .reveal-button,
+        .email-toggle,
+        .load-more {
             align-items: center;
             border-radius: 999px;
+            cursor: pointer;
             display: inline-flex;
             font-weight: 700;
             justify-content: center;
@@ -229,16 +245,26 @@
         }
 
         .button:hover,
-        .button:focus-visible {
+        .button:focus-visible,
+        .reveal-button:hover,
+        .reveal-button:focus-visible,
+        .email-toggle:hover,
+        .email-toggle:focus-visible,
+        .load-more:hover,
+        .load-more:focus-visible {
             transform: translateY(-1px);
         }
 
-        .button.primary {
+        .primary,
+        .email-toggle {
             background: linear-gradient(135deg, var(--accent), #8ee8f3);
+            border: 0;
             color: #04111d;
         }
 
-        .button.secondary {
+        .secondary,
+        .reveal-button,
+        .load-more {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--line);
             color: var(--text);
@@ -255,15 +281,40 @@
             padding: 22px;
         }
 
+        .portrait-card {
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .portrait-card img {
+            aspect-ratio: 4 / 5;
+            display: block;
+            height: 100%;
+            min-height: 420px;
+            object-fit: cover;
+            object-position: center 16%;
+            width: 100%;
+        }
+
         .section {
             border-radius: 28px;
             padding: 28px;
         }
 
-        h2,
-        h3,
-        p {
-            margin-top: 0;
+        .section-header {
+            align-items: flex-start;
+            display: flex;
+            gap: 18px;
+            justify-content: space-between;
+        }
+
+        .section-header p,
+        .card p,
+        .section p,
+        .project-list {
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 0;
         }
 
         .card h2,
@@ -273,18 +324,33 @@
             margin-bottom: 10px;
         }
 
-        .card p,
-        .section p,
-        .project-list {
-            color: var(--muted);
-            line-height: 1.7;
-            margin-bottom: 0;
+        .reveal-panel {
+            display: grid;
+            grid-template-rows: 0fr;
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+            transition: grid-template-rows 320ms ease, opacity 240ms ease, margin-top 320ms ease, visibility 0s linear 320ms;
+            visibility: hidden;
+        }
+
+        .reveal-panel.is-open {
+            grid-template-rows: 1fr;
+            margin-top: 18px;
+            opacity: 1;
+            pointer-events: auto;
+            transition-delay: 0s;
+            visibility: visible;
+        }
+
+        .reveal-panel > div {
+            min-height: 0;
         }
 
         .metrics,
         .grid,
         .project-grid,
-        .gamejam-grid {
+        .game-grid {
             display: grid;
             gap: 14px;
             margin-top: 18px;
@@ -299,10 +365,14 @@
             grid-template-columns: repeat(2, 1fr);
         }
 
+        .game-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
         .metric,
         .tile,
         .project-card,
-        .gamejam-card {
+        .game-item {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 20px;
@@ -311,7 +381,8 @@
 
         .metric strong,
         .tile h3,
-        .project-card h3 {
+        .project-card h3,
+        .game-item strong {
             color: var(--text);
             display: block;
             font-size: 1rem;
@@ -320,19 +391,16 @@
 
         .metric span,
         .tile p,
-        .project-card p {
+        .project-card p,
+        .game-item span {
             color: var(--muted);
             font-size: 0.95rem;
             line-height: 1.6;
             margin: 0;
         }
 
-        .project-list {
-            padding-left: 1.1rem;
-        }
-
-        .project-list li + li {
-            margin-top: 0.35rem;
+        .game-item[hidden] {
+            display: none;
         }
 
         .tag-row {
@@ -351,45 +419,17 @@
             padding: 7px 10px;
         }
 
-        .gamejam-section {
-            opacity: 0.9;
-        }
-
-        .gamejam-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .gamejam-card {
-            align-items: start;
-            display: grid;
-            gap: 12px;
-        }
-
-        .icon-button {
-            align-items: center;
-            background: rgba(15, 23, 42, 0.72);
-            border: 1px solid rgba(248, 250, 252, 0.18);
-            border-radius: 999px;
+        .contact-panel textarea {
+            background: rgba(4, 8, 20, 0.72);
+            border: 1px solid rgba(167, 180, 199, 0.2);
+            border-radius: 14px;
             color: var(--text);
-            cursor: pointer;
-            display: inline-flex;
-            font-size: 1.2rem;
-            height: 44px;
-            justify-content: center;
-            width: 44px;
-        }
-
-        .icon-button:hover,
-        .icon-button:focus-visible {
-            border-color: rgba(34, 211, 238, 0.7);
-        }
-
-        .gamejam-panel[hidden] {
-            display: none;
-        }
-
-        .gamejam-panel h3 {
-            margin: 0 0 8px;
+            line-height: 1.6;
+            margin-top: 14px;
+            min-height: 150px;
+            padding: 14px;
+            resize: vertical;
+            width: 100%;
         }
 
         .note {
@@ -410,7 +450,7 @@
             .metrics,
             .grid,
             .project-grid,
-            .gamejam-grid {
+            .game-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -426,10 +466,19 @@
                 font-size: 3.5rem;
             }
 
-            .topbar {
+            .topbar,
+            .section-header {
                 align-items: flex-start;
-                border-radius: 26px;
                 flex-direction: column;
+            }
+
+            .topbar {
+                border-radius: 26px;
+            }
+
+            .portrait-card img {
+                min-height: 0;
+                max-height: 520px;
             }
         }
     </style>
@@ -441,17 +490,17 @@
                 <span class="brand-mark" aria-hidden="true"></span>
                 Malcolm Grech
             </a>
-            <div class="badge">Game developer portfolio</div>
+            <div class="badge">Software and interactive systems portfolio</div>
         </header>
 
         <main id="top">
             <section class="hero">
                 <div class="hero-copy">
-                    <span class="eyebrow">Unity, Unreal, game AI</span>
+                    <span class="eyebrow">Software, AI, tools, interactive systems</span>
                     <h1>Malcolm Grech</h1>
                     <p class="lede">
-                        Malta-based junior game developer working across Unity engineering, Unreal Engine,
-                        gameplay tuning, feature development, bug fixing, prototyping, and analytics.
+                        Malta-based developer with production experience in Unity and Unreal Engine, a background in AI,
+                        and a practical focus on reliable features, internal tools, prototypes, analytics, and interactive products.
                     </p>
                     <div class="actions">
                         <a class="button primary" href="#projects">Projects</a>
@@ -461,28 +510,24 @@
                 </div>
 
                 <div class="hero-side">
-                    <article class="card">
-                        <h2>Current Role</h2>
-                        <p>
-                            Junior Game Developer at Exient, focused on general Unity engineering,
-                            feature development, art/design support, gameplay tuning, and front-end analytics.
-                        </p>
+                    <article class="card portrait-card">
+                        <img src="wp-content/uploads/portfolio/malcolm-grech-cv-picture.jpg" alt="Portrait of Malcolm Grech">
                     </article>
 
                     <article class="card">
                         <h2>At a glance</h2>
                         <div class="metrics" aria-label="profile highlights">
                             <div class="metric">
-                                <strong>C# / Unity</strong>
-                                <span>Professional gameplay and feature work.</span>
+                                <strong>Engineering</strong>
+                                <span>C#, Unity, C++, Unreal Engine, Python, PHP, HTML and CSS.</span>
                             </div>
                             <div class="metric">
-                                <strong>C++ / Unreal</strong>
-                                <span>AAA engineering internship experience.</span>
+                                <strong>AI background</strong>
+                                <span>BSc in AI plus MSc research around RTS map features and player experience.</span>
                             </div>
                             <div class="metric">
-                                <strong>Game AI</strong>
-                                <span>Masters in Game Development, Bachelors in AI.</span>
+                                <strong>Delivery</strong>
+                                <span>Production, internships, internal tools, research projects, and game jams.</span>
                             </div>
                         </div>
                     </article>
@@ -491,105 +536,144 @@
 
             <section class="sections">
                 <article class="section" id="experience">
-                    <h2>Experience</h2>
-                    <div class="grid">
-                        <div class="tile">
-                            <h3>Exient</h3>
-                            <p>Junior Game Developer, April 2024 to present.</p>
+                    <div class="section-header">
+                        <div>
+                            <h2>Experience</h2>
+                            <p>Current and past roles, summarized first. Click to reveal the detail smoothly.</p>
                         </div>
-                        <div class="tile">
-                            <h3>Sperasoft</h3>
-                            <p>Engineering Intern on AAA Unreal Engine development, October 2023 to February 2024.</p>
-                        </div>
-                        <div class="tile">
-                            <h3>LeoVegas</h3>
-                            <p>Security internship with an internal security-awareness game, July to September 2023.</p>
+                        <button class="reveal-button" type="button" aria-expanded="false" aria-controls="experience-details">Reveal experience</button>
+                    </div>
+                    <div class="reveal-panel" id="experience-details">
+                        <div class="grid">
+                            <div class="tile">
+                                <h3>Exient</h3>
+                                <p>Junior Game Developer, April 2024 to present. General Unity engineering, feature development, bug fixing, art/design support, gameplay tuning, and front-end analytics.</p>
+                            </div>
+                            <div class="tile">
+                                <h3>Sperasoft</h3>
+                                <p>Gameplay Engineering Intern, November 2023 to February 2024. AAA Unreal Engine development, tools, project structure, team practices, and pre-alpha support.</p>
+                            </div>
+                            <div class="tile">
+                                <h3>LeoVegas Group</h3>
+                                <p>Project Developer, July to September 2023. Designed, developed, and deployed an internal Unity security-awareness game.</p>
+                            </div>
+                            <div class="tile">
+                                <h3>MTCP</h3>
+                                <p>Information Management Unit student worker, July 2020 to October 2021. IT support and internal support workflows.</p>
+                            </div>
                         </div>
                     </div>
                 </article>
 
                 <article class="section" id="projects">
-                    <h2>Projects</h2>
-                    <div class="project-grid">
-                        <div class="project-card">
-                            <h3>Professional Game Projects</h3>
-                            <ul class="project-list">
-                                <li>Lemmings</li>
-                                <li>Angry Birds Fury Road</li>
-                                <li>CUE - PC Port</li>
-                                <li>Subway Surfers+ - Apple Arcade port</li>
-                            </ul>
+                    <div class="section-header">
+                        <div>
+                            <h2>Projects and Research</h2>
+                            <p>Portfolio work is grouped by outcome. Click to reveal research and broader project context.</p>
                         </div>
-                        <div class="project-card">
-                            <h3>Engineering and Prototype Work</h3>
-                            <ul class="project-list">
-                                <li>Shrapnel - Pre-Alpha</li>
-                                <li>Unity prototyping</li>
-                                <li>Internal security-awareness game design, development, and deployment</li>
-                                <li>AI chatbot research and implementation</li>
-                            </ul>
+                        <button class="reveal-button" type="button" aria-expanded="false" aria-controls="project-details">Reveal context</button>
+                    </div>
+                    <div class="reveal-panel" id="project-details">
+                        <div class="project-grid">
+                            <div class="project-card">
+                                <h3>Academic Research</h3>
+                                <p>MSc thesis: The Effects of Map Features in RTS Gameplay, a MicroRTS map dataset and map-feature analysis project. BSc thesis: Tracing Historical Paths, an intelligent AR guide with pathfinding and recommender logic.</p>
+                            </div>
+                            <div class="project-card">
+                                <h3>Applied Software</h3>
+                                <p>Internal security-awareness game, AI chatbot research and implementation, Unity prototypes, analytics work, and production support across shipped and in-development products.</p>
+                            </div>
                         </div>
+                    </div>
+                </article>
+
+                <article class="section" id="games">
+                    <div class="section-header">
+                        <div>
+                            <h2>Game and Interactive Project List</h2>
+                            <p>All entries are present but tucked away. Use the button to reveal them in small increments.</p>
+                        </div>
+                        <button class="load-more" type="button" data-reveal-count="4" aria-controls="game-list">Show 4 projects</button>
+                    </div>
+                    <div class="game-grid" id="game-list">
+                        <div class="game-item" hidden><strong>Lemmings</strong><span>Professional Unity project work at Exient.</span></div>
+                        <div class="game-item" hidden><strong>Angry Birds Fury Road</strong><span>Professional Unity project work at Exient.</span></div>
+                        <div class="game-item" hidden><strong>CUE - PC Port</strong><span>Professional porting and production support.</span></div>
+                        <div class="game-item" hidden><strong>Subway Surfers+ - Apple Arcade Port</strong><span>Professional porting and production support.</span></div>
+                        <div class="game-item" hidden><strong>Undisclosed AAA Game / Shrapnel Pre-Alpha</strong><span>Sperasoft internship work around Unreal Engine production practices.</span></div>
+                        <div class="game-item" hidden><strong>You're Dead Meat</strong><span>2024 Malta Global Game Jam multiplayer platformer fighter.</span></div>
+                        <div class="game-item" hidden><strong>Infosec Awareness Game</strong><span>LeoVegas internal information security education game with dialog and minigames.</span></div>
+                        <div class="game-item" hidden><strong>Darwin's Vanguard</strong><span>2023 AI and Games conference game jam tower defence with learning enemy AI agents.</span></div>
+                        <div class="game-item" hidden><strong>Root2</strong><span>2022 Malta Global Game Jam two-player co-op vertical scrolling endless runner.</span></div>
+                        <div class="game-item" hidden><strong>Dungeon Master</strong><span>2022 AI and Games game jam procedurally generated platformer with evolving collectables.</span></div>
+                        <div class="game-item" hidden><strong>Adrift</strong><span>2022 group assignment, narrative first-person fishing survival game.</span></div>
+                        <div class="game-item" hidden><strong>Dungeon of Stonefang</strong><span>2021 game engines assignment, rogue-like dungeon crawler.</span></div>
+                        <div class="game-item" hidden><strong>Savings</strong><span>2020 GEMMA Financial Capability Game Design Competition, life-economy visual novel made in Ren'Py.</span></div>
+                        <div class="game-item" hidden><strong>Final Frontier</strong><span>2020 Advanced Game AI assignment, vertical scrolling 2D shooter.</span></div>
+                        <div class="game-item" hidden><strong>Deep Blue</strong><span>2019 University of Malta AI GameJam side-scrolling survival game.</span></div>
                     </div>
                 </article>
 
                 <article class="section">
-                    <h2>Education and Skills</h2>
-                    <p>
-                        Masters in Game Development and Bachelors in AI from the University of Malta,
-                        with academic work spanning game engines, game design, player modelling,
-                        machine learning, computer vision, reinforcement learning, and compiler theory.
-                    </p>
-                    <div class="tag-row" aria-label="skills">
-                        <span class="tag">Unity</span>
-                        <span class="tag">Unreal Engine</span>
-                        <span class="tag">C#</span>
-                        <span class="tag">C++</span>
-                        <span class="tag">Python</span>
-                        <span class="tag">HTML/CSS</span>
-                        <span class="tag">PHP</span>
-                        <span class="tag">Game AI</span>
+                    <div class="section-header">
+                        <div>
+                            <h2>Education and Skills</h2>
+                            <p>MSc in Digital Games and BSc in AI from the University of Malta. Click for a fuller summary.</p>
+                        </div>
+                        <button class="reveal-button" type="button" aria-expanded="false" aria-controls="education-details">Reveal education</button>
                     </div>
-                </article>
-
-                <article class="section gamejam-section" id="gamejams">
-                    <h2>Game Jam Signals</h2>
-                    <p>Small icons, bigger history. Press one to reveal the jam detail.</p>
-                    <div class="gamejam-grid">
-                        <div class="gamejam-card">
-                            <button class="icon-button" type="button" aria-expanded="false" aria-controls="global-jams" aria-label="Reveal Global Game Jam history">+</button>
-                            <div class="gamejam-panel" id="global-jams" hidden>
-                                <h3>Global Game Jam</h3>
-                                <p>Participated in 2023 and 2024.</p>
-                            </div>
-                        </div>
-                        <div class="gamejam-card">
-                            <button class="icon-button" type="button" aria-expanded="false" aria-controls="ai-jams" aria-label="Reveal AI Game Jam history">+</button>
-                            <div class="gamejam-panel" id="ai-jams" hidden>
-                                <h3>AI GameJam</h3>
-                                <p>Participated in 2022, 2023, and 2024.</p>
-                            </div>
-                        </div>
-                        <div class="gamejam-card">
-                            <button class="icon-button" type="button" aria-expanded="false" aria-controls="bachelors-jam" aria-label="Reveal Bachelors AI GameJam result">+</button>
-                            <div class="gamejam-panel" id="bachelors-jam" hidden>
-                                <h3>Bachelors AI GameJam</h3>
-                                <p>Placed 1st.</p>
+                    <div class="reveal-panel" id="education-details">
+                        <div>
+                            <p>
+                                Academic work spans game studies, game engines, game design, player modelling,
+                                machine learning, computer vision, neural network training, data processing,
+                                reinforcement learning, compiler theory, AI history, and AI applications.
+                            </p>
+                            <div class="tag-row" aria-label="skills">
+                                <span class="tag">C#</span>
+                                <span class="tag">Unity</span>
+                                <span class="tag">C++</span>
+                                <span class="tag">Unreal Engine</span>
+                                <span class="tag">Python</span>
+                                <span class="tag">HTML/CSS</span>
+                                <span class="tag">PHP</span>
+                                <span class="tag">AI and Games</span>
+                                <span class="tag">Computer Vision</span>
+                                <span class="tag">Japanese B1</span>
                             </div>
                         </div>
                     </div>
                 </article>
 
                 <article class="section" id="contact">
-                    <h2>Contact</h2>
-                    <p>
-                        Open to game development, gameplay engineering, Unity, Unreal, and AI-adjacent game work.
-                    </p>
-                    <div class="contact-row">
-                        <a class="button primary" href="mailto:grech366@hotmail.com">Email Malcolm</a>
-                        <a class="button secondary" href="https://www.linkedin.com/in/malcolm-grech-81b86b207/">LinkedIn</a>
-                        <a class="button secondary" href="https://github.com/gostFish?tab=repositories">GitHub</a>
+                    <div class="section-header">
+                        <div>
+                            <h2>Contact</h2>
+                            <p>Open to software, tools, gameplay, Unity, Unreal, AI-adjacent, and interactive product work.</p>
+                        </div>
+                        <button class="email-toggle" type="button" aria-expanded="false" aria-controls="email-details">grech366@hotmail.com</button>
                     </div>
-                    <div class="note">Spoken languages: Maltese, English, and Japanese.</div>
+                    <div class="reveal-panel contact-panel" id="email-details">
+                        <div>
+                            <p>
+                                Email summary: Malcolm Grech is a Malta-based developer with production experience in Unity and Unreal,
+                                academic grounding in AI, and project work across tools, prototypes, gameplay systems, research, and internal education software.
+                            </p>
+                            <textarea readonly>Hello Malcolm,
+
+I saw your portfolio and would like to talk about a software or interactive-systems opportunity.
+
+The work seems aligned with your Unity, Unreal Engine, AI, tooling, prototype, and production-support experience.
+
+Best regards,</textarea>
+                            <div class="contact-row note">
+                                <a class="button primary" href="mailto:grech366@hotmail.com?subject=Portfolio%20enquiry&body=Hello%20Malcolm%2C%0A%0AI%20saw%20your%20portfolio%20and%20would%20like%20to%20talk%20about%20a%20software%20or%20interactive-systems%20opportunity.%0A%0AThe%20work%20seems%20aligned%20with%20your%20Unity%2C%20Unreal%20Engine%2C%20AI%2C%20tooling%2C%20prototype%2C%20and%20production-support%20experience.%0A%0ABest%20regards%2C">Open email draft</a>
+                                <a class="button secondary" href="https://www.linkedin.com/in/malcolm-grech-81b86b207/">LinkedIn</a>
+                                <a class="button secondary" href="https://github.com/gostFish?tab=repositories">GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="note">Languages: Maltese C2, English C2, Japanese B1.</div>
                 </article>
             </section>
         </main>
@@ -600,20 +684,42 @@
     </div>
 
     <script>
-        document.querySelectorAll(".gamejam-card").forEach(function (card) {
-            var button = card.querySelector(".icon-button");
-            var panel = card.querySelector(".gamejam-panel");
+        document.querySelectorAll(".reveal-button, .email-toggle").forEach(function (button) {
+            var panel = document.getElementById(button.getAttribute("aria-controls"));
 
-            if (!button || !panel) {
+            if (!panel) {
                 return;
             }
 
             button.addEventListener("click", function () {
                 var isOpen = button.getAttribute("aria-expanded") === "true";
                 button.setAttribute("aria-expanded", isOpen ? "false" : "true");
-                button.textContent = isOpen ? "+" : "x";
-                panel.hidden = isOpen;
+                panel.classList.toggle("is-open", !isOpen);
             });
+        });
+
+        document.querySelectorAll(".load-more").forEach(function (button) {
+            var list = document.getElementById(button.getAttribute("aria-controls"));
+            var increment = Number(button.getAttribute("data-reveal-count")) || 4;
+
+            if (!list) {
+                return;
+            }
+
+            function updateButton() {
+                var hiddenItems = list.querySelectorAll(".game-item[hidden]");
+                button.textContent = hiddenItems.length ? "Show " + Math.min(increment, hiddenItems.length) + " more projects" : "All projects shown";
+                button.disabled = hiddenItems.length === 0;
+            }
+
+            button.addEventListener("click", function () {
+                Array.from(list.querySelectorAll(".game-item[hidden]")).slice(0, increment).forEach(function (item) {
+                    item.hidden = false;
+                });
+                updateButton();
+            });
+
+            updateButton();
         });
     </script>
 </body>
