@@ -543,6 +543,17 @@ body.home .landing-tile h3 {
     margin: 0 0 8px;
 }
 
+body.home .landing-tile h3 a {
+    color: #f4f7fb;
+    text-decoration-color: rgba(34, 211, 238, 0.5);
+    text-underline-offset: 4px;
+}
+
+body.home .landing-tile h3 a:hover,
+body.home .landing-tile h3 a:focus-visible {
+    color: #8ee8f3;
+}
+
 body.home .landing-tile p {
     color: #a7b4c7;
     line-height: 1.6;
