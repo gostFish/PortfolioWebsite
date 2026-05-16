@@ -951,6 +951,7 @@ body.home .landing-game-item span {
     line-height: 1.6;
 }
 
+body.home .landing-contact-panel input,
 body.home .landing-contact-panel textarea {
     background: rgba(4, 8, 20, 0.72);
     border: 1px solid rgba(167, 180, 199, 0.2);
@@ -958,11 +959,25 @@ body.home .landing-contact-panel textarea {
     color: #f4f7fb;
     font: inherit;
     line-height: 1.6;
-    margin-top: 14px;
     min-height: 150px;
     padding: 14px;
-    resize: vertical;
     width: 100%;
+}
+
+body.home .landing-contact-panel input {
+    min-height: 0;
+}
+
+body.home .landing-contact-panel textarea {
+    resize: vertical;
+}
+
+body.home .landing-contact-label {
+    color: #d7dee8;
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 14px 0 8px;
 }
 
 @media (max-width: 880px) {
@@ -1146,7 +1161,9 @@ document.addEventListener('DOMContentLoaded', function () {
             button.disabled = allShown;
 
             if (showLessButton) {
-                showLessButton.disabled = visibleCount <= minimumVisible;
+                const canShowLess = visibleCount > minimumVisible;
+                showLessButton.hidden = !canShowLess;
+                showLessButton.disabled = !canShowLess;
             }
         }
 

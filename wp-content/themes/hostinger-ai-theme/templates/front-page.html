@@ -112,10 +112,10 @@
             <article class="landing-section" id="games">
                 <div class="landing-section-header">
                     <div>
-                        <h2>Game and Interactive Project List</h2>
-                        <p>Professional releases are highlighted first. Open the section for the full list, then expand or reduce the smaller projects.</p>
+                        <h2>Games and Interactive Projects List</h2>
+                        <p>Professional releases are highlighted first. Reveal context for the full list, then expand or reduce the smaller projects.</p>
                     </div>
-                    <button class="landing-reveal-button" type="button" aria-expanded="false" aria-controls="game-details">Open games</button>
+                    <button class="landing-reveal-button" type="button" aria-expanded="false" aria-controls="game-details">Reveal context</button>
                 </div>
                 <div class="landing-reveal-panel" id="game-details">
                     <div class="landing-game-sections">
@@ -174,7 +174,7 @@
                             </div>
                             <div class="landing-list-controls">
                                 <button class="landing-load-more" type="button" data-reveal-count="4" data-initial-count="4" aria-controls="game-list">Show more projects</button>
-                                <button class="landing-show-less" type="button" data-reveal-count="4" data-initial-count="4" aria-controls="game-list">Show less</button>
+                                <button class="landing-show-less" type="button" data-reveal-count="4" data-initial-count="4" aria-controls="game-list" hidden>Show less</button>
                             </div>
                         </section>
                     </div>
@@ -284,15 +284,17 @@
                             Email summary: Malcolm Grech is a Malta-based developer with production experience in Unity and Unreal,
                             academic grounding in AI, and project work across tools, prototypes, gameplay systems, research, and internal education software.
                         </p>
-                        <textarea readonly>Hello Malcolm,
+                        <label class="landing-contact-label" for="landing-email-subject">Subject</label>
+                        <input id="landing-email-subject" type="text" value="Portfolio enquiry" readonly>
+                        <label class="landing-contact-label" for="landing-email-message">Message</label>
+                        <textarea id="landing-email-message" readonly>Hello Malcolm,
 
-I saw your portfolio and would like to talk about a software or interactive-systems opportunity.
+I came across your portfolio and wanted to get in touch.
 
-The work seems aligned with your Unity, Unreal Engine, AI, tooling, prototype, and production-support experience.
+I would be interested in learning more about your work with Unity, Unreal Engine, AI, tooling, prototypes, and production-support projects.
 
 Best regards,</textarea>
                         <div class="landing-contact-row landing-note">
-                            <a class="landing-button landing-button--primary" href="mailto:grech366@hotmail.com?subject=Portfolio%20enquiry&body=Hello%20Malcolm%2C%0A%0AI%20saw%20your%20portfolio%20and%20would%20like%20to%20talk%20about%20a%20software%20or%20interactive-systems%20opportunity.%0A%0AThe%20work%20seems%20aligned%20with%20your%20Unity%2C%20Unreal%20Engine%2C%20AI%2C%20tooling%2C%20prototype%2C%20and%20production-support%20experience.%0A%0ABest%20regards%2C">Open email draft</a>
                             <a class="landing-button landing-button--secondary" href="https://www.linkedin.com/in/malcolm-grech-81b86b207/">LinkedIn</a>
                             <a class="landing-button landing-button--secondary" href="https://github.com/gostFish?tab=repositories">GitHub</a>
                         </div>
