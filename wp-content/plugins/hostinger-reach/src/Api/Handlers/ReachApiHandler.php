@@ -15,6 +15,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class ReachApiHandler extends ApiHandler {
+    private const MAX_EMAIL_LENGTH          = 254;
+    private const MAX_NAME_LENGTH           = 120;
+    private const MAX_GROUP_LENGTH          = 120;
+    private const MAX_TAGS_LENGTH           = 500;
+    private const MAX_METADATA_ITEMS        = 20;
+    private const MAX_METADATA_VALUE_LENGTH = 200;
+    private const RATE_LIMIT_WINDOW         = 15 * MINUTE_IN_SECONDS;
+    private const RATE_LIMIT_EMAIL_MAX      = 5;
+    private const RATE_LIMIT_IP_MAX         = 20;
+
     protected string $hostinger_auth_url;
     protected string $reach_domain;
     public ApiKeyManager $api_key_manager;
@@ -137,17 +147,32 @@ class ReachApiHandler extends ApiHandler {
     }
 
     public function post_contact_handler( WP_REST_Request $request ): WP_REST_Response {
-        if ( ! $this->is_authorized( $request ) ) {
-            return $this->handle_wp_error( new WP_Error( $this->get_not_connected_error_message(), 'You cannot perform this action' ) );
+        if ( ! $this->has_valid_rest_nonce( $request ) ) {
+            return $this->handle_wp_error( new WP_Error( 'invalid_request', 'You cannot perform this action', array( 'status' => 403 ) ) );
         }
 
-        $email    = $request->get_param( 'email' );
-        $name     = $request->get_param( 'name' );
-        $surname  = $request->get_param( 'surname' );
-        $form_id  = $request->get_param( 'id' );
-        $metadata = $request->get_param( 'metadata' );
-        $tags     = $request->get_param( 'tags' );
-        $group    = apply_filters( 'hostinger_reach_get_group', $request->get_param( 'group' ), $form_id );
+        if ( $this->is_honeypot_submission( $request ) ) {
+            return new WP_REST_Response( array( 'success' => true ), 200 );
+        }
+
+        $email = sanitize_email( $this->get_scalar_request_param( $request, 'email' ) );
+        if ( strlen( $email ) > self::MAX_EMAIL_LENGTH || ! is_email( $email ) ) {
+            return $this->handle_wp_error(
+                new WP_Error(
+                    'invalid_email',
+                    __( 'Please enter a valid email address.', 'hostinger-reach' ),
+                    array( 'status' => 400 )
+                )
+            );
+        }
+
+        $name     = $this->sanitize_limited_text( $this->get_scalar_request_param( $request, 'name' ), self::MAX_NAME_LENGTH );
+        $surname  = $this->sanitize_limited_text( $this->get_scalar_request_param( $request, 'surname' ), self::MAX_NAME_LENGTH );
+        $form_id  = $this->sanitize_limited_text( $this->get_scalar_request_param( $request, 'id' ), self::MAX_GROUP_LENGTH );
+        $metadata = $this->sanitize_metadata( $request->get_param( 'metadata' ) );
+        $tags     = $this->sanitize_limited_text( $this->get_scalar_request_param( $request, 'tags' ), self::MAX_TAGS_LENGTH );
+        $group    = apply_filters( 'hostinger_reach_get_group', $this->get_scalar_request_param( $request, 'group' ), $form_id );
+        $group    = is_scalar( $group ) ? $this->sanitize_limited_text( (string) $group, self::MAX_GROUP_LENGTH ) : '';
 
         return $this->post_contact(
             array(
@@ -163,9 +188,13 @@ class ReachApiHandler extends ApiHandler {
     }
 
     public function is_authorized( WP_REST_Request $request ): bool {
+        return $this->has_valid_rest_nonce( $request ) && $this->get_connection_status_handler();
+    }
+
+    private function has_valid_rest_nonce( WP_REST_Request $request ): bool {
         $nonce = $request->get_header( 'X-WP-Nonce' );
 
-        return wp_verify_nonce( $nonce, 'wp_rest' ) && $this->get_connection_status_handler();
+        return (bool) wp_verify_nonce( $nonce, 'wp_rest' );
     }
 
     public function post_generate_auth_url(): WP_REST_Response {
@@ -240,14 +269,42 @@ class ReachApiHandler extends ApiHandler {
     }
 
     public function post_contact( array $data ): WP_REST_Response {
+        $email = sanitize_email( (string) ( $data['email'] ?? '' ) );
+        if ( strlen( $email ) > self::MAX_EMAIL_LENGTH || ! is_email( $email ) ) {
+            return $this->handle_wp_error(
+                new WP_Error(
+                    'invalid_email',
+                    __( 'Please enter a valid email address.', 'hostinger-reach' ),
+                    array( 'status' => 400 )
+                )
+            );
+        }
+
+        if ( $this->is_rate_limited( $email ) ) {
+            return $this->handle_wp_error(
+                new WP_Error(
+                    'rate_limited',
+                    __( 'Please wait a moment before trying again.', 'hostinger-reach' ),
+                    array( 'status' => 429 )
+                )
+            );
+        }
+
+        $data['email'] = $email;
+
         if ( ! $this->get_connection_status_handler() ) {
             $this->api_key_manager->clear_token();
 
             return $this->handle_wp_error( new WP_Error( $this->get_not_connected_error_message(), 'You cannot perform this action' ) );
         }
 
+        $raw_group     = $data['group'] ?? '';
+        $raw_tags      = $data['tags'] ?? '';
+        $data['group'] = is_scalar( $raw_group ) ? $this->sanitize_limited_text( (string) $raw_group, self::MAX_GROUP_LENGTH ) : '';
+        $data['tags']  = is_scalar( $raw_tags ) ? $this->sanitize_limited_text( (string) $raw_tags, self::MAX_TAGS_LENGTH ) : '';
+
         $contact    = $this->parse_contact( $data );
-        $group_name = $data['group'] ? $data['group'] : HOSTINGER_REACH_DEFAULT_CONTACT_LIST;
+        $group_name = ! empty( $data['group'] ) ? $data['group'] : HOSTINGER_REACH_DEFAULT_CONTACT_LIST;
         $tag_ids    = $this->get_tag_ids( $data['tags'] ?? '', $group_name );
 
         if ( empty( $tag_ids ) ) {
@@ -388,21 +445,18 @@ class ReachApiHandler extends ApiHandler {
 
     private function parse_contact( array $data ): array {
         $contact = array(
-            'email' => sanitize_email( $data['email'] ),
+            'email' => sanitize_email( (string) ( $data['email'] ?? '' ) ),
         );
 
         if ( ! empty( $data['name'] ) ) {
-            $contact['name'] = $this->ensure_utf8( (string) $data['name'] );
+            $contact['name'] = $this->sanitize_limited_text( (string) $data['name'], self::MAX_NAME_LENGTH );
         }
 
         if ( ! empty( $data['surname'] ) ) {
-            $contact['surname'] = $this->ensure_utf8( (string) $data['surname'] );
+            $contact['surname'] = $this->sanitize_limited_text( (string) $data['surname'], self::MAX_NAME_LENGTH );
         }
 
-        $metadata = $data['metadata'] ?? array();
-        if ( ! is_array( $metadata ) ) {
-            $metadata = array();
-        }
+        $metadata = $this->sanitize_metadata( $data['metadata'] ?? array() );
 
         // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Internal metadata key.
         $metadata['platform'] = 'wordpress';
@@ -414,6 +468,82 @@ class ReachApiHandler extends ApiHandler {
         $contact['metadata'] = $metadata;
 
         return $contact;
+    }
+
+    private function get_scalar_request_param( WP_REST_Request $request, string $param ): string {
+        $value = $request->get_param( $param );
+
+        return is_scalar( $value ) ? (string) $value : '';
+    }
+
+    private function is_honeypot_submission( WP_REST_Request $request ): bool {
+        return trim( $this->get_scalar_request_param( $request, 'website_url' ) ) !== '';
+    }
+
+    private function is_rate_limited( string $email ): bool {
+        $ip = $this->get_request_ip();
+
+        if ( $ip !== 'unknown' && $this->exceeds_rate_limit( 'hostinger_reach_ip_' . hash( 'sha256', $ip ), self::RATE_LIMIT_IP_MAX ) ) {
+            return true;
+        }
+
+        return $this->exceeds_rate_limit(
+            'hostinger_reach_email_' . hash( 'sha256', strtolower( $email ) . '|' . $ip ),
+            self::RATE_LIMIT_EMAIL_MAX
+        );
+    }
+
+    private function exceeds_rate_limit( string $key, int $limit ): bool {
+        $attempts = (int) get_transient( $key );
+        if ( $attempts >= $limit ) {
+            return true;
+        }
+
+        set_transient( $key, $attempts + 1, self::RATE_LIMIT_WINDOW );
+
+        return false;
+    }
+
+    private function get_request_ip(): string {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+
+        return is_string( $ip ) && filter_var( $ip, FILTER_VALIDATE_IP ) ? $ip : 'unknown';
+    }
+
+    private function sanitize_metadata( $metadata ): array {
+        if ( ! is_array( $metadata ) ) {
+            return array();
+        }
+
+        $sanitized = array();
+        foreach ( $metadata as $key => $value ) {
+            if ( count( $sanitized ) >= self::MAX_METADATA_ITEMS ) {
+                break;
+            }
+
+            $sanitized_key = sanitize_key( (string) $key );
+            if ( $sanitized_key === '' || ! is_scalar( $value ) ) {
+                continue;
+            }
+
+            $sanitized[ $sanitized_key ] = $this->sanitize_limited_text( (string) $value, self::MAX_METADATA_VALUE_LENGTH );
+        }
+
+        return $sanitized;
+    }
+
+    private function sanitize_limited_text( string $value, int $max_length ): string {
+        $value = sanitize_text_field( $this->ensure_utf8( $value ) );
+
+        return $this->truncate_string( $value, $max_length );
+    }
+
+    private function truncate_string( string $value, int $max_length ): string {
+        if ( function_exists( 'mb_substr' ) ) {
+            return mb_substr( $value, 0, $max_length, 'UTF-8' );
+        }
+
+        return substr( $value, 0, $max_length );
     }
 
     private function ensure_utf8( string $value ): string {

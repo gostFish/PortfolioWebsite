@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class LogoRoutes {
-	private const ALLOWED_MIME_TYPES = array( 'image/jpeg', 'image/png', 'image/svg+xml' );
+	private const ALLOWED_MIME_TYPES = array( 'image/jpeg', 'image/png', 'image/webp' );
 	private const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 	public function set_logo( WP_REST_Request $request ): WP_REST_Response|WP_Error {
@@ -31,7 +31,7 @@ class LogoRoutes {
 		if ( ! in_array( $mime_type, self::ALLOWED_MIME_TYPES, true ) ) {
 			return new WP_Error(
 				'invalid_mime_type',
-				__( 'Invalid file type. Allowed types: jpg, png, svg.', 'hostinger-ai-theme' ),
+				__( 'Invalid file type. Allowed types: jpg, png, webp.', 'hostinger-ai-theme' ),
 				array( 'status' => WP_Http::BAD_REQUEST )
 			);
 		}

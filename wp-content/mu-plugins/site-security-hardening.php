@@ -5,6 +5,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Blocks WordPress admin's built-in file editor only; filesystem, Git, SFTP, and Codex edits still work.
+if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
+    define( 'DISALLOW_FILE_EDIT', true );
+}
+
+add_filter( 'automatic_updater_disabled', '__return_false', 100 );
+add_filter( 'allow_minor_auto_core_updates', '__return_true', 100 );
+add_filter( 'allow_major_auto_core_updates', '__return_false', 100 );
+add_filter( 'allow_dev_auto_core_updates', '__return_false', 100 );
+
 add_action(
     'send_headers',
     static function (): void {

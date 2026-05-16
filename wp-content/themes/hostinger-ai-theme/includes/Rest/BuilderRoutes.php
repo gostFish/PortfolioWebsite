@@ -279,7 +279,6 @@ class BuilderRoutes {
                 array(
                     'status' => \WP_Http::BAD_REQUEST,
                     'errors' => $errors,
-                    'error'  => 'Validation failed: ' . implode( ', ', array_keys( $errors ) ) . ' missing',
                 )
             );
         }
@@ -342,7 +341,7 @@ class BuilderRoutes {
                 $has_failures = true;
                 $failed_plugins[] = $plugin;
                 if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                    error_log( "Hostinger AI Theme: $plugin plugin installation failed - " . $result['error'] );
+                    error_log( "Hostinger AI Theme: $plugin plugin installation failed - " . $this->sanitize_error_message( $result['error'] ?? '' ) );
                 }
 
                 $failed_step = $plugin_step_map[ $plugin ] ?? 'plugin_enable';
@@ -356,16 +355,12 @@ class BuilderRoutes {
         );
 
         if ( $has_failures ) {
-            $failed_plugins_str = implode( ', ', $failed_plugins );
-            $error_message = 'Plugin installation failed: ' . $failed_plugins_str;
-
             return new WP_Error(
                 'plugin_installation_failed',
                 __( 'Plugin installation failed.', 'hostinger-ai-theme' ),
                 array(
                     'status'  => WP_Http::SERVICE_UNAVAILABLE,
                     'plugins' => $results,
-                    'error'   => $error_message,
                 )
             );
         }
@@ -401,7 +396,6 @@ class BuilderRoutes {
                 __( 'Failed to generate pages list.', 'hostinger-ai-theme' ),
                 array(
                     'status' => WP_Http::SERVICE_UNAVAILABLE,
-                    'error'  => $e->getMessage(),
                 )
             );
         }
@@ -470,7 +464,6 @@ class BuilderRoutes {
                 __( 'Wrong sequence of step execution.', 'hostinger-ai-theme' ),
                 array(
                     'status' => WP_Http::BAD_REQUEST,
-                    'error'  => 'Wrong sequence of step execution - version missing',
                 )
             );
         }
@@ -496,7 +489,6 @@ class BuilderRoutes {
                     __( 'Failed to generate structure.', 'hostinger-ai-theme' ),
                     array(
                         'status' => WP_Http::SERVICE_UNAVAILABLE,
-                        'error'  => 'Structure generation failed',
                     )
                 );
             }
@@ -512,7 +504,6 @@ class BuilderRoutes {
                 __( 'Failed to generate structure.', 'hostinger-ai-theme' ),
                 array(
                     'status' => WP_Http::SERVICE_UNAVAILABLE,
-                    'error'  => $e->getMessage(),
                 )
             );
         }
@@ -540,7 +531,6 @@ class BuilderRoutes {
                 __( 'Wrong sequence of step execution.', 'hostinger-ai-theme' ),
                 array(
                     'status' => WP_Http::BAD_REQUEST,
-                    'error'  => 'Wrong sequence of step execution - structure missing',
                 )
             );
         }
@@ -570,7 +560,7 @@ class BuilderRoutes {
                 $error_code = 'plugin_installation_failed';
                 $failure_type = 'plugin_installation';
                 if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                    error_log( 'Hostinger AI Theme: Plugin installation failed during content generation - ' . $error_message );
+                    error_log( 'Hostinger AI Theme: Plugin installation failed during content generation - ' . $this->sanitize_error_message( $error_message ) );
                 }
             }
 
@@ -581,7 +571,6 @@ class BuilderRoutes {
                 __( 'Problem generating content.', 'hostinger-ai-theme' ),
                 array(
                     'status' => WP_Http::SERVICE_UNAVAILABLE,
-                    'error'  => $error_message,
                 )
             );
         }
@@ -609,7 +598,6 @@ class BuilderRoutes {
                 __( 'Wrong sequence of step execution.', 'hostinger-ai-theme' ),
                 array(
                     'status' => WP_Http::BAD_REQUEST,
-                    'error'  => 'Wrong sequence of step execution - content missing',
                 )
             );
         }
@@ -628,7 +616,6 @@ class BuilderRoutes {
                 __( 'Problem building content.', 'hostinger-ai-theme' ),
                 array(
                     'status' => WP_Http::SERVICE_UNAVAILABLE,
-                    'error'  => $e->getMessage(),
                 )
             );
         }
@@ -687,13 +674,9 @@ class BuilderRoutes {
             return $response;
 
         } catch ( Exception $e ) {
-            return new WP_Error(
-                'ai_service_error',
-                $e->getMessage(),
-                array(
-                    'status' => WP_Http::SERVICE_UNAVAILABLE,
-                )
-            );
+            $this->log_exception( 'AI prompt enhancement failed', $e );
+
+            return $this->service_unavailable_error();
         }
     }
 
@@ -740,13 +723,9 @@ class BuilderRoutes {
             return $response;
 
         } catch ( Exception $e ) {
-            return new WP_Error(
-                'ai_service_error',
-                $e->getMessage(),
-                array(
-                    'status' => WP_Http::SERVICE_UNAVAILABLE,
-                )
-            );
+            $this->log_exception( 'AI brand and type detection failed', $e );
+
+            return $this->service_unavailable_error();
         }
     }
 
@@ -783,13 +762,9 @@ class BuilderRoutes {
             return $response;
 
         } catch ( Exception $e ) {
-            return new WP_Error(
-                'ai_service_error',
-                $e->getMessage(),
-                array(
-                    'status' => WP_Http::SERVICE_UNAVAILABLE,
-                )
-            );
+            $this->log_exception( 'AI brand name detection failed', $e );
+
+            return $this->service_unavailable_error();
         }
     }
 
@@ -828,13 +803,9 @@ class BuilderRoutes {
             return $response;
 
         } catch ( Exception $e ) {
-            return new WP_Error(
-                'ai_service_error',
-                $e->getMessage(),
-                array(
-                    'status' => WP_Http::SERVICE_UNAVAILABLE,
-                )
-            );
+            $this->log_exception( 'AI website type detection failed', $e );
+
+            return $this->service_unavailable_error();
         }
     }
 
@@ -868,7 +839,6 @@ class BuilderRoutes {
                 __( 'Problem setting colors.', 'hostinger-ai-theme' ),
                 array(
                     'status' => \WP_Http::BAD_REQUEST,
-                    'error'  => $e->getMessage(),
                 )
             );
         }
@@ -908,9 +878,9 @@ class BuilderRoutes {
 
         } catch ( Exception $exception ) {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'Detect Brand Name API Error: ' . $exception->getMessage() );
+                error_log( 'Detect Brand Name API Error: ' . $this->sanitize_error_message( $exception->getMessage() ) );
             }
-            throw new Exception( 'Detect brand name service temporarily unavailable: ' . $exception->getMessage() );
+            throw new Exception( 'Detect brand name service temporarily unavailable.' );
         }
     }
 
@@ -937,9 +907,9 @@ class BuilderRoutes {
 
         } catch ( Exception $exception ) {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'Detect Website Type API Error: ' . $exception->getMessage() );
+                error_log( 'Detect Website Type API Error: ' . $this->sanitize_error_message( $exception->getMessage() ) );
             }
-            throw new Exception( 'Detect website type service temporarily unavailable: ' . $exception->getMessage() );
+            throw new Exception( 'Detect website type service temporarily unavailable.' );
         }
     }
 
@@ -957,9 +927,9 @@ class BuilderRoutes {
 
         } catch ( Exception $exception ) {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'AI Enhancement API Error: ' . $exception->getMessage() );
+                error_log( 'AI Enhancement API Error: ' . $this->sanitize_error_message( $exception->getMessage() ) );
             }
-            throw new Exception( 'AI enhancement service temporarily unavailable: ' . $exception->getMessage() );
+            throw new Exception( 'AI enhancement service temporarily unavailable.' );
         }
     }
 
@@ -994,9 +964,25 @@ class BuilderRoutes {
 
         } catch ( Exception $exception ) {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'Detect Brand and Type API Error: ' . $exception->getMessage() );
+                error_log( 'Detect Brand and Type API Error: ' . $this->sanitize_error_message( $exception->getMessage() ) );
             }
-            throw new Exception( 'Detect brand and type service temporarily unavailable: ' . $exception->getMessage() );
+            throw new Exception( 'Detect brand and type service temporarily unavailable.' );
+        }
+    }
+
+    private function service_unavailable_error(): WP_Error {
+        return new WP_Error(
+            'ai_service_error',
+            __( 'The AI service is temporarily unavailable. Please try again.', 'hostinger-ai-theme' ),
+            array(
+                'status' => WP_Http::SERVICE_UNAVAILABLE,
+            )
+        );
+    }
+
+    private function log_exception( string $context, Exception $exception ): void {
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            error_log( 'Hostinger AI Theme: ' . $context . ' - ' . $this->sanitize_error_message( $exception->getMessage() ) );
         }
     }
 
@@ -1066,13 +1052,9 @@ class BuilderRoutes {
             return $response;
 
         } catch ( Exception $e ) {
-            return new \WP_Error(
-                'ai_service_error',
-                $e->getMessage(),
-                array(
-                    'status' => \WP_Http::SERVICE_UNAVAILABLE,
-                )
-            );
+            $this->log_exception( 'AI scam detection failed', $e );
+
+            return $this->service_unavailable_error();
         }
     }
 
@@ -1113,9 +1095,9 @@ class BuilderRoutes {
 
         } catch ( Exception $exception ) {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'Scam Detector API Error: ' . $exception->getMessage() );
+                error_log( 'Scam Detector API Error: ' . $this->sanitize_error_message( $exception->getMessage() ) );
             }
-            throw new Exception( 'Scam detector service temporarily unavailable: ' . $exception->getMessage() );
+            throw new Exception( 'Scam detector service temporarily unavailable.' );
         }
     }
 }

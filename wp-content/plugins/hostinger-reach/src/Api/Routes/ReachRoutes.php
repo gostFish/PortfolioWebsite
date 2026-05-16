@@ -64,6 +64,11 @@ class ReachRoutes extends Routes {
                         'default'  => '',
                         'type'     => 'string',
                     ),
+                    'website_url' => array(
+                        'required' => false,
+                        'default'  => '',
+                        'type'     => 'string',
+                    ),
                     'metadata' => array(
                         'required'   => false,
                         'type'       => 'object',

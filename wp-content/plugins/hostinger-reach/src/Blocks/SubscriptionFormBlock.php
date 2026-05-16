@@ -77,6 +77,10 @@ class SubscriptionFormBlock extends Block {
                 <input type="hidden" name="id" value="<?php echo esc_attr( $form_id ); ?>">
                 <input type="hidden" name="tags" value="<?php echo esc_attr( implode( ',', $tags ) ); ?>">
                 <input type="hidden" name="metadata.plugin" value="<?php echo esc_attr( $plugin ); ?>">
+                <div class="hostinger-reach-honeypot" style="display: none;" aria-hidden="true">
+                    <label for="<?php echo esc_attr( $form_id ); ?>-website-url"><?php esc_html_e( 'Website', 'hostinger-reach' ); ?></label>
+                    <input type="text" id="<?php echo esc_attr( $form_id ); ?>-website-url" name="website_url" tabindex="-1" autocomplete="off">
+                </div>
 
                 <div
                     class="hostinger-reach-block-form-fields <?php echo esc_attr( $is_inline ? 'hostinger-reach-block-form-fields--inline' : '' ); ?>">
@@ -84,14 +88,14 @@ class SubscriptionFormBlock extends Block {
                         <label
                             for="<?php echo esc_attr( $form_id ); ?>-email"><?php esc_html_e( 'Email', 'hostinger-reach' ); ?>
                             <span class="required">*</span></label>
-                        <input type="email" id="<?php echo esc_attr( $form_id ); ?>-email" name="email" required>
+                        <input type="email" id="<?php echo esc_attr( $form_id ); ?>-email" name="email" maxlength="254" required>
                     </div>
 
                     <?php if ( $show_name ) : ?>
                         <div class="hostinger-reach-block-form-field">
                             <label
                                 for="<?php echo esc_attr( $form_id ); ?>-name"><?php esc_html_e( 'Name', 'hostinger-reach' ); ?></label>
-                            <input type="text" id="<?php echo esc_attr( $form_id ); ?>-name" name="name">
+                            <input type="text" id="<?php echo esc_attr( $form_id ); ?>-name" name="name" maxlength="120">
                         </div>
                     <?php endif; ?>
 
@@ -99,7 +103,7 @@ class SubscriptionFormBlock extends Block {
                         <div class="hostinger-reach-block-form-field">
                             <label
                                 for="<?php echo esc_attr( $form_id ); ?>-surname"><?php esc_html_e( 'Surname', 'hostinger-reach' ); ?></label>
-                            <input type="text" id="<?php echo esc_attr( $form_id ); ?>-surname" name="surname">
+                            <input type="text" id="<?php echo esc_attr( $form_id ); ?>-surname" name="surname" maxlength="120">
                         </div>
                     <?php endif; ?>
 

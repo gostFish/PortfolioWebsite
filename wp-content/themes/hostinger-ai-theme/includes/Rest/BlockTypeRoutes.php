@@ -95,7 +95,7 @@ class BlockTypeRoutes {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
                 error_log(sprintf(
                     '[AI_THEME_SECTION_ERROR] Error: %s | Description: %s',
-                    $e->getMessage(),
+                    $this->sanitize_error_message( $e->getMessage() ),
                     substr($description ?? 'N/A', 0, 100) . (strlen($description ?? '') > 100 ? '...' : '')
                 ));
             }
@@ -105,7 +105,6 @@ class BlockTypeRoutes {
             $error_message = __( 'Failed to generate section content. Please try again with a different description.', 'hostinger-ai-theme' );
             return new WP_Error( 'section_generation_failed', $error_message, [
                 'status' => WP_Http::INTERNAL_SERVER_ERROR,
-                'error'  => $e->getMessage(),
             ] );
         }
     }
@@ -175,7 +174,7 @@ class BlockTypeRoutes {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
                 error_log(sprintf(
                     '[AI_THEME_PAGE_ERROR] Error: %s | Description: %s | Page Name: %s',
-                    $e->getMessage(),
+                    $this->sanitize_error_message( $e->getMessage() ),
                     substr($description ?? 'N/A', 0, 100) . (strlen($description ?? '') > 100 ? '...' : ''),
                     $page_name ?? 'N/A'
                 ));
@@ -186,7 +185,6 @@ class BlockTypeRoutes {
             $error_message = __( 'Failed to generate page content. Please try again with a different description.', 'hostinger-ai-theme' );
             return new WP_Error( 'page_generation_failed', $error_message, [
                 'status' => WP_Http::INTERNAL_SERVER_ERROR,
-                'error'  => $e->getMessage(),
             ] );
         }
     }
@@ -222,7 +220,7 @@ class BlockTypeRoutes {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
                 error_log(sprintf(
                     '[AI_THEME_CONTENT_ERROR] Error: %s | Description: %s | Parameters: %s',
-                    $e->getMessage(),
+                    $this->sanitize_error_message( $e->getMessage() ),
                     substr($description ?? 'N/A', 0, 100) . (strlen($description ?? '') > 100 ? '...' : ''),
                     json_encode($parameters ?? [])
                 ));
@@ -233,7 +231,6 @@ class BlockTypeRoutes {
             $error_message = __( 'Failed to generate content. Please try again with a different description.', 'hostinger-ai-theme' );
             return new WP_Error( 'content_generation_failed', $error_message, [
                 'status' => WP_Http::INTERNAL_SERVER_ERROR,
-                'error'  => $e->getMessage(),
             ] );
         }
     }
@@ -391,7 +388,7 @@ class BlockTypeRoutes {
 
         if ( ! $block_type['success'] ) {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log(sprintf('[AI_THEME_BLOCK_TYPE_ERROR] Block type determination failed: %s', $block_type['error']));
+                error_log(sprintf('[AI_THEME_BLOCK_TYPE_ERROR] Block type determination failed: %s', $this->sanitize_error_message( $block_type['error'] )));
             }
             throw new Exception( $block_type['error'] );
         }
