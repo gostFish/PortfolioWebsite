@@ -1,0 +1,27 @@
+# Local OS/editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Local backups and temporary exports
+.htaccess.bk
+*.bak
+*.tmp
+
+# WordPress/LiteSpeed generated artifacts
+wp-content/upgrade/
+wp-content/litespeed/*.vercheck
+wp-content/litespeed/debug/*.log
+wp-content/litespeed/debug/*.txt
+wp-content/themes/hostinger-ai-theme/gutenberg-blocks/*/build/
+wp-content/themes/hostinger-ai-theme/assets/js/main.min/
+wp-content/themes/hostinger-ai-theme/assets/js/*.min.js
+wp-content/themes/hostinger-ai-theme/assets/js/**/*.LICENSE.txt
+wp-content/plugins/hostinger/vue-frontend/dist/
+wp-content/plugins/hostinger-reach/frontend/dist/
+wp-content/plugins/hostinger-easy-onboarding/assets/js/*.min.js
+wp-content/plugins/hostinger-easy-onboarding/assets/css/*.min.css
+
+# Runtime logs
+*.log
