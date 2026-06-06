@@ -25,3 +25,13 @@ wp-content/plugins/hostinger-easy-onboarding/assets/css/*.min.css
 
 # Runtime logs
 *.log
+
+# Unity temporary project data
+FontTempProject/Library/
+FontTempProject/Temp/
+FontTempProject/Logs/
+FontTempProject/Obj/
+FontTempProject/Build/
+FontTempProject/Builds/
+FontTempProject/MemoryCaptures/
+FontTempProject/UserSettings/
