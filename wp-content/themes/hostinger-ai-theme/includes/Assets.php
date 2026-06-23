@@ -315,11 +315,13 @@ body.home .landing-brand {
 }
 
 body.home .landing-brand-mark {
-    background: linear-gradient(135deg, #22d3ee, #8b5cf6);
-    border-radius: 11px;
-    box-shadow: 0 10px 24px rgba(34, 211, 238, 0.22);
+    border: 1px solid rgba(217, 251, 255, 0.32);
+    border-radius: 50%;
+    box-shadow: 0 10px 24px rgba(34, 211, 238, 0.18);
+    display: block;
     flex: 0 0 34px;
     height: 34px;
+    object-fit: cover;
     width: 34px;
 }
 
