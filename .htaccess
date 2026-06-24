@@ -29,7 +29,7 @@ CacheKeyModify -qs:_ga
 ## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
 ## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
 # END NON_LSCACHE
-# BEGIN WordPress
+# BEGIN Static Site
 <IfModule mod_expires.c>
 	ExpiresActive On
 	ExpiresByType image/jpg "access plus 1 year"
@@ -45,11 +45,8 @@ CacheKeyModify -qs:_ga
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase /
-DirectoryIndex index.php index.html
-RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
+DirectoryIndex index.html index.php
+RewriteRule ^index\.php$ / [R=301,L]
 </IfModule>
 
-# END WordPress
+# END Static Site

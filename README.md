@@ -1,10 +1,11 @@
 # Portfolio Website
 
-This repository is a deployed WordPress site for Malcolm Grech's portfolio. Treat it as a live site export first and a source repository second: many files are WordPress core, third-party plugin code, generated assets, or host-specific configuration.
+This repository is the source of truth for Malcolm Grech's portfolio site. The public site is now static-first, with `index.html` as the primary entry point; many files are still WordPress-era leftovers, generated assets, or host-specific configuration.
 
 ## Start Here
 
-- Main site/theme edits: `wp-content/themes/hostinger-ai-theme/`
+- Main site edits: `index.html` and supporting assets
+- Legacy WordPress-era files: `wp-content/themes/hostinger-ai-theme/`
 - Site-wide custom logic: `wp-content/mu-plugins/`
 - Plugin behavior: `wp-content/plugins/`
 - User assets: `wp-content/uploads/`
@@ -21,4 +22,4 @@ This repository is a deployed WordPress site for Malcolm Grech's portfolio. Trea
 
 ## Notes
 
-The root `index.html` is a custom static landing page, but `.htaccess` currently prefers `index.php`, so normal traffic enters WordPress first. Keep it documented rather than deleting it until the intended deployment path is clear.
+The root `index.html` is the public homepage. WordPress files remain in the repo for backward compatibility and reference, but they should no longer control normal traffic.
