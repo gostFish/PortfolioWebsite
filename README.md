@@ -23,3 +23,4 @@ This repository is the source of truth for Malcolm Grech's portfolio site. The p
 ## Notes
 
 The root `index.html` is the public homepage. WordPress files remain in the repo for backward compatibility and reference, but they should no longer control normal traffic.
+Pushes to `main` now deploy the static site through GitHub Pages from `.github/workflows/pages.yml`.
