@@ -703,7 +703,6 @@ body.home .landing-footer {
 
 body.home .landing-button,
 body.home .landing-reveal-button,
-body.home .landing-email-toggle,
 body.home .landing-load-more,
 body.home .landing-show-less {
     align-items: center;
@@ -722,8 +721,6 @@ body.home .landing-button:hover,
 body.home .landing-button:focus-visible,
 body.home .landing-reveal-button:hover,
 body.home .landing-reveal-button:focus-visible,
-body.home .landing-email-toggle:hover,
-body.home .landing-email-toggle:focus-visible,
 body.home .landing-load-more:hover,
 body.home .landing-load-more:focus-visible,
 body.home .landing-show-less:hover,
@@ -731,8 +728,7 @@ body.home .landing-show-less:focus-visible {
     transform: translateY(-1px);
 }
 
-body.home .landing-button--primary,
-body.home .landing-email-toggle {
+body.home .landing-button--primary {
     background: linear-gradient(135deg, #22d3ee, #8ee8f3);
     border: 0;
     color: #04111d;
@@ -745,6 +741,13 @@ body.home .landing-show-less {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(167, 180, 199, 0.18);
     color: #f4f7fb;
+}
+
+body.home .landing-contact-email {
+    color: #8ee8f3;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0;
 }
 
 body.home .landing-load-more:disabled,
@@ -1130,7 +1133,7 @@ document.addEventListener('DOMContentLoaded', function () {
         buildProjectCard(findProjectCard(titleNode));
     });
 
-    document.querySelectorAll('.landing-reveal-button, .landing-email-toggle').forEach(function (button) {
+    document.querySelectorAll('.landing-reveal-button').forEach(function (button) {
         const panel = document.getElementById(button.getAttribute('aria-controls'));
 
         if (!button || !panel) {
