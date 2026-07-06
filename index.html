@@ -233,7 +233,6 @@
 
         .button,
         .reveal-button,
-        .email-toggle,
         .load-more {
             align-items: center;
             border-radius: 999px;
@@ -251,8 +250,6 @@
         .button:focus-visible,
         .reveal-button:hover,
         .reveal-button:focus-visible,
-        .email-toggle:hover,
-        .email-toggle:focus-visible,
         .load-more:hover,
         .load-more:focus-visible,
         .show-less:hover,
@@ -260,8 +257,7 @@
             transform: translateY(-1px);
         }
 
-        .primary,
-        .email-toggle {
+        .primary {
             background: linear-gradient(135deg, var(--accent), #8ee8f3);
             border: 0;
             color: #04111d;
@@ -274,6 +270,13 @@
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--line);
             color: var(--text);
+        }
+
+        .contact-email {
+            color: #8ee8f3;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0;
         }
 
         .hero-side,
@@ -528,19 +531,6 @@
             padding: 7px 10px;
         }
 
-        .contact-panel textarea {
-            background: rgba(4, 8, 20, 0.72);
-            border: 1px solid rgba(167, 180, 199, 0.2);
-            border-radius: 14px;
-            color: var(--text);
-            line-height: 1.6;
-            margin-top: 14px;
-            min-height: 150px;
-            padding: 14px;
-            resize: vertical;
-            width: 100%;
-        }
-
         .note {
             color: #9bb3c9;
             font-size: 0.94rem;
@@ -620,7 +610,6 @@
 
             .button,
             .reveal-button,
-            .email-toggle,
             .load-more {
                 width: 100%;
             }
@@ -890,23 +879,11 @@
                             <h2>Contact</h2>
                             <p>Open to software, tools, gameplay, Unity, Unreal, AI-adjacent, and interactive product work.</p>
                         </div>
-                        <button class="email-toggle" type="button" aria-expanded="false" aria-controls="email-details">grech366@hotmail.com</button>
+                        <p class="contact-email">grech366@hotmail.com</p>
                     </div>
-                    <div class="reveal-panel contact-panel" id="email-details">
-                        <div>
-                            <textarea readonly>Hello Malcolm,
-
-I saw your portfolio and would like to talk about a software or interactive-systems opportunity.
-
-The work seems aligned with your Unity, Unreal Engine, AI, tooling, prototype, and production-support experience.
-
-Best regards,</textarea>
-                            <div class="contact-row note">
-                                <a class="button primary" href="mailto:grech366@hotmail.com?subject=Portfolio%20enquiry&body=Hello%20Malcolm%2C%0A%0AI%20saw%20your%20portfolio%20and%20would%20like%20to%20talk%20about%20a%20software%20or%20interactive-systems%20opportunity.%0A%0AThe%20work%20seems%20aligned%20with%20your%20Unity%2C%20Unreal%20Engine%2C%20AI%2C%20tooling%2C%20prototype%2C%20and%20production-support%20experience.%0A%0ABest%20regards%2C">Open email draft</a>
-                                <a class="button secondary" href="https://www.linkedin.com/in/malcolm-grech-81b86b207/">LinkedIn</a>
-                                <a class="button secondary" href="https://github.com/gostFish?tab=repositories">GitHub</a>
-                            </div>
-                        </div>
+                    <div class="contact-row note">
+                        <a class="button secondary" href="https://www.linkedin.com/in/malcolm-grech-81b86b207/">LinkedIn</a>
+                        <a class="button secondary" href="https://github.com/gostFish?tab=repositories">GitHub</a>
                     </div>
                     <div class="note">Languages: Maltese C2, English C2, Japanese B1.</div>
                 </article>
@@ -919,7 +896,7 @@ Best regards,</textarea>
     </div>
 
     <script>
-        document.querySelectorAll(".reveal-button, .email-toggle").forEach(function (button) {
+        document.querySelectorAll(".reveal-button").forEach(function (button) {
             var panel = document.getElementById(button.getAttribute("aria-controls"));
 
             if (!panel) {
